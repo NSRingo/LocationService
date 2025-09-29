@@ -1,0 +1,30 @@
+#!name = {{@package 'displayName'}}
+#!desc = {{inline (@package 'description')}}
+#!openUrl = {{@package 'openUrl'}}
+#!author = {{@package 'contributors'}}
+#!homepage = {{@package 'homepage'}}
+#!icon = {{@package 'icon'}}
+#!category = {{@package 'organizationName'}}
+#!date = {{now "yyyy-MM-dd HH:mm:ss"}}
+#!version = {{@package 'version'}}
+#!arguments = {{{arguments}}}
+#!arguments-desc = {{{argumentsDesc}}}
+
+[Rule]
+# 📍 Country Code
+DOMAIN,gspe1-ssl.ls.apple.com,DIRECT
+# 📍 Amap Dispatcher
+DOMAIN,dispatcher.is.autonavi.com,DIRECT
+
+[Script]
+# 📍 Country Code
+📍 LocationService.pep.gcc.response = type=http-response, pattern=^https?:\/\/gspe1-ssl\.ls\.apple\.com\/pep\/gcc, requires-body=1, script-path=https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/response.bundle.js, argument={{{scriptParams}}}
+# 📍 Dispatcher
+📍 LocationService.Dispatcher.request = type=http-request, pattern=^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher, requires-body=1, binary-body-mode=1, debug=1, script-path=https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/request.bundle.js argument={{{scriptParams}}}
+📍 LocationService.Dispatcher.response = type=http-response, pattern=^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher, requires-body=1, binary-body-mode=1, debug=1, script-path=https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/response.bundle.js, argument={{{scriptParams}}}
+# 🗺️ Network Defaults
+🗺️ Maps.config.defaults.request = type=http-request, pattern=^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults, script-path=https://github.com/NSRingo/GeoServices/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}
+🗺️ Maps.config.defaults.response = type=http-response, pattern=^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults, requires-body=1, engine=webview, script-path=https://github.com/NSRingo/GeoServices/releases/download/v{{@package 'version'}}/response.bundle.js, argument={{{scriptParams}}}
+
+[MITM]
+hostname = %APPEND% gspe1-ssl.ls.apple.com, dispatcher.is.autonavi.com, configuration.ls.apple.com

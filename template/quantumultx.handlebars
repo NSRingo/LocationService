@@ -1,0 +1,28 @@
+#!name = {{@package 'displayName'}}
+#!desc = {{inline (@package 'description')}}
+#!openUrl = {{@package 'openUrl'}}
+#!author = {{@package 'contributors'}}
+#!homepage = {{@package 'homepage'}}
+#!icon = {{@package 'icon'}}
+#!category = {{@package 'organizationName'}}
+#!date = {{now "yyyy-MM-dd HH:mm:ss"}}
+#!version = {{@package 'version'}}
+
+#[filter_local]
+# 📍 Country Code
+host,gspe1-ssl.ls.apple.com,direct
+# 📍 Amap Dispatcher
+host,dispatcher.is.autonavi.com,direct
+
+#[rewrite_local]
+# 📍 Country Code
+^https?:\/\/gspe1-ssl\.ls\.apple\.com\/pep\/gcc url script-response-body https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/request.bundle.js
+# 📍 Dispatcher
+^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher url script-request-body https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/request.bundle.js
+^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher url script-response-body https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/response.bundle.js
+# 🗺️ Network Defaults
+^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults url script-request-header https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/request.bundle.js
+^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults url script-response-body https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/response.bundle.js
+
+#[mitm]
+hostname = gspe1-ssl.ls.apple.com, dispatcher.is.autonavi.com, configuration.ls.apple.com

@@ -1,0 +1,33 @@
+#!name = {{@package 'displayName'}}
+#!desc = {{inline (@package 'description')}}
+#!openUrl = {{@package 'openUrl'}}
+#!author = {{@package 'contributors'}}
+#!homepage = {{@package 'homepage'}}
+#!icon = {{@package 'icon'}}
+#!tag = {{@package 'organizationName'}}
+#!system = {{@package 'system'}}
+#!date = {{now "yyyy-MM-dd HH:mm:ss"}}
+#!version = {{@package 'version'}}
+#!system_version = {{ @package 'systemVersion'}}
+
+[Argument]
+{{{arguments}}}
+
+[Rule]
+# 📍 Country Code
+DOMAIN,gspe1-ssl.ls.apple.com,DIRECT
+# 📍 Amap Dispatcher
+DOMAIN,dispatcher.is.autonavi.com,DIRECT
+
+[Script]
+# 📍 Country Code
+http-response ^https?:\/\/gspe1-ssl\.ls\.apple\.com\/pep\/gcc script-path=https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/response.bundle.js, requires-body=1, tag=📍 LocationService.pep.gcc.response, argument={{{scriptParams}}}
+# 📍 Dispatcher
+http-request ^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher script-path=https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/request.bundle.js, requires-body=1, binary-body-mode=1, tag=📍 LocationService.Dispatcher.request, argument={{{scriptParams}}}
+http-response ^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher script-path=https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/response.bundle.js, requires-body=1, binary-body-mode=1, tag=📍 LocationService.Dispatcher.response, argument={{{scriptParams}}}
+# 🗺️ Network Defaults
+http-request ^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults script-path=https://github.com/NSRingo/GeoServices/releases/download/v{{@package 'version'}}/request.bundle.js, tag=🗺️ Maps.config.defaults.request, argument={{{scriptParams}}}
+http-response ^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults script-path=https://github.com/NSRingo/GeoServices/releases/download/v{{@package 'version'}}/response.bundle.js, requires-body=1, tag=🗺️ Maps.config.defaults.response, argument={{{scriptParams}}}
+
+[MITM]
+hostname = gspe1-ssl.ls.apple.com, dispatcher.is.autonavi.com, configuration.ls.apple.com

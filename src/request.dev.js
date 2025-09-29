@@ -97,7 +97,10 @@ Console.info(`FORMAT: ${FORMAT}`);
 									Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
 									switch (body.requestType) {
 										case "REQUEST_TYPE_REVERSE_GEOCODING":
-											body.placeRequestParameters.reverseGeocodingParameters.preserveOriginalLocation = false;
+											//body.placeRequestParameters.reverseGeocodingParameters.preserveOriginalLocation = false;
+											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "PLACE_QUESTIONNAIRE")) {
+												body.requestedComponent.push({type: "PLACE_QUESTIONNAIRE", count: 1}); // PLACE_QUESTIONNAIRE
+											}
 											break;
 										case "REQUEST_TYPE_MAPS_HOME":
 											//body.displayRegion = "US";

@@ -162,6 +162,8 @@ export default class GEOPDPlaceResponse {
 				AutoNaviDispatcher = AppleDispatcher;
 				break;
 			case "STATUS_SUCCESS|STATUS_SUCCESS":
+				AutoNaviDispatcher.placeResult = GEOPDPlaceResponse.fillMissingByType(AutoNaviDispatcher.placeResult, AppleDispatcher.placeResult, "muid");
+				AutoNaviDispatcher.mapsResult = [...AutoNaviDispatcher.mapsResult, ...AppleDispatcher.mapsResult];
 				switch (AutoNaviDispatcher.requestType) {
 					case "REQUEST_TYPE_REVERSE_GEOCODING":
 						_.set(AutoNaviDispatcher, "globalResult.reverseGeocodingResult.showResult", true);
@@ -171,53 +173,52 @@ export default class GEOPDPlaceResponse {
 						//body.clientMetadata.deviceCountryCode = "US";
 						break;
 				}
-				if (AppleDispatcher.placeResult) AutoNaviDispatcher.placeResult = AppleDispatcher.placeResult;
 				/*
-				switch (AutoNaviDispatcher.mapsResult?.[0]?.resultType) {
-					case "PLACE":
-						if (AppleDispatcher.placeResult) _.set(AutoNaviDispatcher, "placeResult", AutoNaviDispatcher.mapsResult[0].place);
-						if (AppleDispatcher.mapsResult[0]?.place?.mapsId?.shardedId?.center) _.set(AutoNaviDispatcher.mapsResult[0], "place.mapsId.shardedId.center", AppleDispatcher.mapsResult[0].place.mapsId.shardedId.center);
-						if (AppleDispatcher.mapsResult[0]?.place?.mapsId?.shardedId?.mapsResultType) _.set(AutoNaviDispatcher.mapsResult[0], "place.mapsId.shardedId.mapsResultType", AppleDispatcher.mapsResult[0].place.mapsId.shardedId.mapsResultType);
-						// 补全缺失的 component
-						AutoNaviDispatcher.mapsResult[0].place.component = GEOPDPlaceResponse.fillMissingByType(AutoNaviDispatcher.mapsResult[0].place.component, AppleDispatcher.mapsResult[0]?.place?.component);
-						// 替换为苹果的 component
-						AutoNaviDispatcher.mapsResult[0].place.component = AutoNaviDispatcher.mapsResult[0].place.component.map(component => {
-							switch (component.type) {
-								case "ISO_3166_CODE": // 个性化修改的
-									component.value = component.value.map(value => {
-										if (typeof value.iso3166Code !== "undefined") value.iso3166Code.countryCode = "US";
-										return value;
-									});
-									break;
-								// case "ENTITY":
-								case "PLACE_INFO": // 一定要替换的
-								// case "ADDRESS_OBJECT":
-								case "CAPTIONED_PHOTO":
-								case "FLYOVER": // 一定要替换的
-								case "RAP": // 一定要替换的
-								case "VENUE_INFO": // 一定要替换的
-								// case "EXPLORE_GUIDES": // 85 - 探索指南，没必要替换
-								case "POI_CLAIM": // 96 - Apple Business Connect 集成
-								// case "UNKONWN102": // 102 - 百科-详细信息-链接
-									component = AppleDispatcher.mapsResult[0]?.place?.component?.find(AppleComponent => AppleComponent.type === component.type) ?? component;
-									break;
-								default:
-									switch (component.status) {
-										case "STATUS_SUCCESS":
-											break;
-										default:
-											component = AppleDispatcher.mapsResult[0]?.place?.component?.find(AppleComponent => AppleComponent.type === component.type) ?? component;
-											break;
-									}
-									break;
-							}
-							return component;
-						});
-						break;
-					case "BATCH_REVERSE_GEOCODE":
-						AutoNaviDispatcher.mapsResult[0].batchReverseGeocode = AppleDispatcher.mapsResult[0]?.batchReverseGeocode ?? AppleDispatcher.mapsResult[0]?.batchReverseGeocode;
-						break;
-				}
+				if (AppleDispatcher.mapsResult.length > 0) {
+					switch (AutoNaviDispatcher.mapsResult?.[0]?.resultType) {
+						case "PLACE":
+							//if (AppleDispatcher.mapsResult[0]?.place?.mapsId?.shardedId?.center) _.set(AutoNaviDispatcher.mapsResult[0], "place.mapsId.shardedId.center", AppleDispatcher.mapsResult[0].place.mapsId.shardedId.center);
+							//if (AppleDispatcher.mapsResult[0]?.place?.mapsId?.shardedId?.mapsResultType) _.set(AutoNaviDispatcher.mapsResult[0], "place.mapsId.shardedId.mapsResultType", AppleDispatcher.mapsResult[0].place.mapsId.shardedId.mapsResultType);
+							// 补全缺失的 component
+							AutoNaviDispatcher.mapsResult[0].place.component = GEOPDPlaceResponse.fillMissingByType(AutoNaviDispatcher.mapsResult[0].place.component, AppleDispatcher.mapsResult[0]?.place?.component);
+							// 替换为苹果的 component
+							AutoNaviDispatcher.mapsResult[0].place.component = AutoNaviDispatcher.mapsResult[0].place.component.map(component => {
+								switch (component.type) {
+									case "ISO_3166_CODE": // 个性化修改的
+										component.value = component.value.map(value => {
+											if (typeof value.iso3166Code !== "undefined") value.iso3166Code.countryCode = "US";
+											return value;
+										});
+										break;
+									// case "ENTITY":
+									case "PLACE_INFO": // 一定要替换的
+									// case "ADDRESS_OBJECT":
+									case "CAPTIONED_PHOTO":
+									case "FLYOVER": // 一定要替换的
+									case "RAP": // 一定要替换的
+									case "VENUE_INFO": // 一定要替换的
+									// case "EXPLORE_GUIDES": // 85 - 探索指南，没必要替换
+									case "POI_CLAIM": // 96 - Apple Business Connect 集成
+										// case "UNKONWN102": // 102 - 百科-详细信息-链接
+										component = AppleDispatcher.mapsResult[0]?.place?.component?.find(AppleComponent => AppleComponent.type === component.type) ?? component;
+										break;
+									default:
+										switch (component.status) {
+											case "STATUS_SUCCESS":
+												break;
+											default:
+												component = AppleDispatcher.mapsResult[0]?.place?.component?.find(AppleComponent => AppleComponent.type === component.type) ?? component;
+												break;
+										}
+										break;
+								}
+								return component;
+							});
+							break;
+						case "BATCH_REVERSE_GEOCODE":
+							AutoNaviDispatcher.mapsResult[0].batchReverseGeocode = AppleDispatcher.mapsResult[0]?.batchReverseGeocode ?? AppleDispatcher.mapsResult[0]?.batchReverseGeocode;
+							break;
+					}
 				*/
 				break;
 		}

@@ -193,8 +193,9 @@ export default class GEOPDPlaceResponse {
 								case "FLYOVER": // 一定要替换的
 								case "RAP": // 一定要替换的
 								case "VENUE_INFO": // 一定要替换的
-								// case "EXPLORE_GUIDES": // 探索指南，没必要替换
-								// case "UNKONWN102": // 百科-详细信息-链接
+								// case "EXPLORE_GUIDES": // 85 - 探索指南，没必要替换
+								case "POI_CLAIM": // 96 - Apple Business Connect 集成
+								// case "UNKONWN102": // 102 - 百科-详细信息-链接
 									component = AppleDispatcher.mapsResult[0]?.place?.component?.find(AppleComponent => AppleComponent.type === component.type) ?? component;
 									break;
 								default:

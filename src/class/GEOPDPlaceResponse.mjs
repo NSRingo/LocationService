@@ -163,7 +163,8 @@ export default class GEOPDPlaceResponse {
 				break;
 			case "STATUS_SUCCESS|STATUS_SUCCESS":
 				AutoNaviDispatcher.placeResult = GEOPDPlaceResponse.fillMissingByType(AutoNaviDispatcher.placeResult, AppleDispatcher.placeResult, "muid");
-				AutoNaviDispatcher.mapsResult = [...AutoNaviDispatcher.mapsResult, ...AppleDispatcher.mapsResult];
+				AutoNaviDispatcher.mapsResult = GEOPDPlaceResponse.fillMissingByType(AutoNaviDispatcher.mapsResult, AppleDispatcher.mapsResult, "resultType");
+				//AutoNaviDispatcher.mapsResult = [...AutoNaviDispatcher.mapsResult, ...AppleDispatcher.mapsResult];
 				switch (AutoNaviDispatcher.requestType) {
 					case "REQUEST_TYPE_REVERSE_GEOCODING":
 						_.set(AutoNaviDispatcher, "globalResult.reverseGeocodingResult.showResult", true);
@@ -227,22 +228,68 @@ export default class GEOPDPlaceResponse {
 	}
 
 	/**
-	 * 把 Apple中那些在 AutoNavi 中不存在 type 的对象「填充」到 AutoNavi 中
+	 * 把 Apple 中那些在 AutoNavi 中不存在 type 的对象「填充」到 AutoNavi 中
 	 * @param {Array<Object>} AutoNavi 初始数组，元素有属性 type 等
 	 * @param {Array<Object>} Apple 要“补充”的数组
 	 * @param {string} key 用以比较的属性名（这里是 "type"）
 	 */
-	static fillMissingByType(AutoNavi = [], Apple = [], key = "type") {
-		// 可以先把 A 中已有的 type 放进一个 Set，做快速查重
-		const existing = new Set(AutoNavi.map(item => item[key]));
+	static fillMissingByType(AutoNavi = [], Apple = [], Key = "type") {
+		const Result = [];
 
-		for (const apple of Apple) {
-			if (!existing.has(apple[key])) {
-				AutoNavi.push(apple);
-				//existing.add(apple[key]); // 重复的也要添加，所以这里注释掉
+		const allKey = new Set();
+		AutoNavi.forEach(result => allKey.add(result[Key]));
+		Apple.forEach(result => allKey.add(result[Key]));
+
+		// 可以先把已有的 type 放进一个 Map，做快速查重
+		const AutoNaviMap = new Map();
+		const AppleMap = new Map();
+		AutoNavi.forEach(result => AutoNaviMap.set(result[Key], result));
+		Apple.forEach(result => AppleMap.set(result[Key], result));
+
+		for (const key of allKey) {
+			const autoNavi = AutoNaviMap.get(key);
+			const apple = AppleMap.get(key);
+			switch (`${AutoNaviMap.has(key)}|${AppleMap.has(key)}`) {
+				case "true|true":
+					switch (`${autoNavi.status}|${apple.status}`) {
+						case "STATUS_SUCCESS|STATUS_SUCCESS":
+							Result.push(apple);
+							break;
+						case "STATUS_SUCCESS|FAILED_NO_RESULT":
+							Result.push(autoNavi);
+							break;
+						case "FAILED_NO_RESULT|STATUS_SUCCESS":
+							Result.push(apple);
+							break;
+						case "FAILED_NO_RESULT|FAILED_NO_RESULT":
+							Result.push(apple);
+							break;
+						case "undefined|undefined":
+							Result.push(apple);
+							/*
+							const result = {...autoNavi, ...apple};
+							switch (key) {
+								case "PLACE":
+								result.place.component = GEOPDPlaceResponse.fillMissingByType(autoNavi.place.component, apple.place.component, "muid");
+								break;
+							}
+							Result.push(result);
+							*/
+							break;
+					}
+					break;
+				case "true|false":
+					Result.push(autoNavi);
+					break;
+				case "false|true":
+					Result.push(apple);
+					break;
+				case "false|false":
+					Result.push(apple);
+					break;
 			}
 		}
-		// 返回 A，方便链式或调用使用
-		return AutoNavi;
+		// 返回 Result，方便链式或调用使用
+		return Result;
 	}
 }

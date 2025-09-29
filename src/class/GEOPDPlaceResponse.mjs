@@ -171,8 +171,11 @@ export default class GEOPDPlaceResponse {
 						//body.clientMetadata.deviceCountryCode = "US";
 						break;
 				}
+				if (AppleDispatcher.placeResult) AutoNaviDispatcher.placeResult = AppleDispatcher.placeResult;
+				/*
 				switch (AutoNaviDispatcher.mapsResult?.[0]?.resultType) {
 					case "PLACE":
+						if (AppleDispatcher.placeResult) _.set(AutoNaviDispatcher, "placeResult", AutoNaviDispatcher.mapsResult[0].place);
 						if (AppleDispatcher.mapsResult[0]?.place?.mapsId?.shardedId?.center) _.set(AutoNaviDispatcher.mapsResult[0], "place.mapsId.shardedId.center", AppleDispatcher.mapsResult[0].place.mapsId.shardedId.center);
 						if (AppleDispatcher.mapsResult[0]?.place?.mapsId?.shardedId?.mapsResultType) _.set(AutoNaviDispatcher.mapsResult[0], "place.mapsId.shardedId.mapsResultType", AppleDispatcher.mapsResult[0].place.mapsId.shardedId.mapsResultType);
 						// 补全缺失的 component
@@ -215,6 +218,7 @@ export default class GEOPDPlaceResponse {
 						AutoNaviDispatcher.mapsResult[0].batchReverseGeocode = AppleDispatcher.mapsResult[0]?.batchReverseGeocode ?? AppleDispatcher.mapsResult[0]?.batchReverseGeocode;
 						break;
 				}
+				*/
 				break;
 		}
 		Console.log("✅ GEOPDPlaceResponse.composite");

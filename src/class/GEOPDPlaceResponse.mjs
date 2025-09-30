@@ -264,22 +264,27 @@ export default class GEOPDPlaceResponse {
 					switch (key) {
 						case "PLACE": {
 							AutoNaviArray.forEach(autoNavi => {
-								const autoNaviCountryCode = autoNavi.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
-								if (autoNaviCountryCode === "CN") Result.push(autoNavi);
+								if (autoNavi.place.status === "STATUS_SUCCESS") {
+									const autoNaviCountryCode = autoNavi.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
+									if (autoNaviCountryCode === "CN") Result.push(autoNavi);
+								}
 							});
 							AppleArray.forEach(apple => {
-								const appleCountryCode = apple.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
-								if (appleCountryCode !== "CN") Result.push(apple);
+								if (apple.place.status === "STATUS_SUCCESS") {
+									const appleCountryCode = apple.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
+									if (appleCountryCode !== "CN") Result.push(apple);
+								}
 								if (Result.length === 0) Result.push(apple); // 至少要有一个结果
 							});
 							break;
 						}
 						case "COLLECTION":
+						case "PUBLISHER":
 							Result.push(...AppleArray);
 							break;
 						default:
 							Result.push(...AppleArray);
-							Result.push(...AutoNaviArray);
+							//Result.push(...AutoNaviArray);
 							break;
 					}
 					break;

@@ -261,11 +261,11 @@ export default class GEOPDPlaceResponse {
 				case `0|${AppleArray.length}`:
 					Result.push(...AppleArray);
 					break;
-				case "1|1":
+				case "1|1": {
 					const autoNavi = AutoNaviArray[0];
 					const apple = AppleArray[0];
 					switch (key) {
-						case "PLACE":
+						case "PLACE": {
 							const autoNaviCountryCode = autoNavi.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
 							const appleCountryCode = apple.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
 							switch (`${autoNaviCountryCode}|${appleCountryCode}`) {
@@ -283,15 +283,24 @@ export default class GEOPDPlaceResponse {
 									break;
 							}
 							break;
+						}
 						default:
 							Result.push(...AppleArray);
 							Result.push(...AutoNaviArray);
 							break;
 					}
 					break;
+				}
 				case `${AutoNaviArray.length}|${AppleArray.length}`:
-					Result.push(...AppleArray);
-					Result.push(...AutoNaviArray);
+					switch (key) {
+						case "COLLECTION":
+							Result.push(...AppleArray);
+							break;
+						default:
+							Result.push(...AppleArray);
+							Result.push(...AutoNaviArray);
+							break;
+					}
 					break;
 			}
 		}

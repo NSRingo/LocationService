@@ -251,48 +251,29 @@ export default class GEOPDPlaceResponse {
 					AppleArray = AppleArray.filter(result => result.status === "STATUS_SUCCESS");
 					break;
 			}
-			switch (`${AutoNaviArray.length}|${AppleArray.length}`) {
-				case "0|0":
+			switch (`${AutoNaviArray.length > 0}|${AppleArray.length > 0}`) {
+				case "false|false":
+					break;
+				case "true|false":
 					Result.push(...AutoNaviArray);
 					break;
-				case `${AutoNaviArray.length}|0`:
-					Result.push(...AutoNaviArray);
-					break;
-				case `0|${AppleArray.length}`:
+				case "false|true":
 					Result.push(...AppleArray);
 					break;
-				case "1|1": {
-					const autoNavi = AutoNaviArray[0];
-					const apple = AppleArray[0];
+				case "true|true":
 					switch (key) {
 						case "PLACE": {
-							const autoNaviCountryCode = autoNavi.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
-							const appleCountryCode = apple.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
-							switch (`${autoNaviCountryCode}|${appleCountryCode}`) {
-								case "CN|CN":
-									Result.push(autoNavi);
-									break;
-								case `CN|${appleCountryCode}`:
-									Result.push(autoNavi);
-									break;
-								case `${autoNaviCountryCode}|CN`:
-									Result.push(apple);
-									break;
-								case `${autoNaviCountryCode}|${appleCountryCode}`:
-									Result.push(apple);
-									break;
-							}
+							AutoNaviArray.forEach(autoNavi => {
+								const autoNaviCountryCode = autoNavi.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
+								if (autoNaviCountryCode === "CN") Result.push(autoNavi);
+							});
+							AppleArray.forEach(apple => {
+								const appleCountryCode = apple.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
+								if (appleCountryCode !== "CN") Result.push(apple);
+								if (Result.length === 0) Result.push(apple); // 至少要有一个结果
+							});
 							break;
 						}
-						default:
-							Result.push(...AppleArray);
-							Result.push(...AutoNaviArray);
-							break;
-					}
-					break;
-				}
-				case `${AutoNaviArray.length}|${AppleArray.length}`:
-					switch (key) {
 						case "COLLECTION":
 							Result.push(...AppleArray);
 							break;

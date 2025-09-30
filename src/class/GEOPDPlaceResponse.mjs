@@ -240,52 +240,24 @@ export default class GEOPDPlaceResponse {
 		AutoNavi.forEach(result => allKey.add(result[Key]));
 		Apple.forEach(result => allKey.add(result[Key]));
 
-		// 可以先把已有的 type 放进一个 Map，做快速查重
-		const AutoNaviMap = new Map();
-		const AppleMap = new Map();
-		AutoNavi.forEach(result => AutoNaviMap.set(result[Key], result));
-		Apple.forEach(result => AppleMap.set(result[Key], result));
-
 		for (const key of allKey) {
-			const autoNavi = AutoNaviMap.get(key);
-			const apple = AppleMap.get(key);
-			switch (`${AutoNaviMap.has(key)}|${AppleMap.has(key)}`) {
+			const AutoNaviArray = AutoNavi.filter(result => result[Key] === key);
+			const AppleArray = Apple.filter(result => result[Key] === key);
+			const successAutoNaviArray = AutoNaviArray.filter(result => result.status === "STATUS_SUCCESS");
+			const successAppleArray = AppleArray.filter(result => result.status === "STATUS_SUCCESS");
+			switch (`${successAutoNaviArray.length > 0}|${successAppleArray.length > 0}`) {
 				case "true|true":
-					switch (`${autoNavi.status}|${apple.status}`) {
-						case "STATUS_SUCCESS|STATUS_SUCCESS":
-							Result.push(apple);
-							break;
-						case "STATUS_SUCCESS|FAILED_NO_RESULT":
-							Result.push(autoNavi);
-							break;
-						case "FAILED_NO_RESULT|STATUS_SUCCESS":
-							Result.push(apple);
-							break;
-						case "FAILED_NO_RESULT|FAILED_NO_RESULT":
-							Result.push(apple);
-							break;
-						case "undefined|undefined":
-							Result.push(apple);
-							/*
-							const result = {...autoNavi, ...apple};
-							switch (key) {
-								case "PLACE":
-								result.place.component = GEOPDPlaceResponse.fillMissingByType(autoNavi.place.component, apple.place.component, "muid");
-								break;
-							}
-							Result.push(result);
-							*/
-							break;
-					}
+					Result.push(...successAppleArray);
+					Result.push(...successAutoNaviArray);
 					break;
 				case "true|false":
-					Result.push(autoNavi);
+					Result.push(...successAutoNaviArray);
 					break;
 				case "false|true":
-					Result.push(apple);
+					Result.push(...successAppleArray);
 					break;
 				case "false|false":
-					Result.push(apple);
+					Result.push(...AppleArray);
 					break;
 			}
 		}

@@ -1,9 +1,7 @@
 export default {
 	Location: {
 		Settings: {
-			PEP: {
-				GCC: "US",
-			},
+			GeoCountryCode: "US",
 			Redirect: {
 				Dispatcher: "AUTO",
 			}

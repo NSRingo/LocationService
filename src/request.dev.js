@@ -173,7 +173,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 									Connection: "keep-alive",
 									"Content-Encoding": "identity",
 								},
-								body: Settings.PEP.GCC,
+								body: Settings.GeoCountryCode,
 							};
 							Console.debug(JSON.stringify($response));
 							*/

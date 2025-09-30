@@ -152,7 +152,7 @@ export default class GEOPDPlaceResponse {
 		return rawBody;
 	}
 
-	static composite(AutoNaviDispatcher = {}, AppleDispatcher = {}, Settings = {}) {
+	static composite(AutoNaviDispatcher = {}, AppleDispatcher = {}) {
 		Console.log("☑️ GEOPDPlaceResponse.composite");
 		switch (`${AutoNaviDispatcher.status}|${AppleDispatcher.status}`) {
 			case "STATUS_SUCCESS|FAILED_NO_RESULT":
@@ -162,7 +162,6 @@ export default class GEOPDPlaceResponse {
 				AutoNaviDispatcher = AppleDispatcher;
 				break;
 			case "STATUS_SUCCESS|STATUS_SUCCESS":
-				body.displayRegion = Settings.PEP.GCC;
 				AutoNaviDispatcher.placeResult = GEOPDPlaceResponse.fillMissingByType(AutoNaviDispatcher.placeResult, AppleDispatcher.placeResult, "muid");
 				AutoNaviDispatcher.mapsResult = GEOPDPlaceResponse.fillMissingByType(AutoNaviDispatcher.mapsResult, AppleDispatcher.mapsResult, "resultType");
 				AutoNaviDispatcher.dotPlace = [...AutoNaviDispatcher.dotPlace, ...AppleDispatcher.dotPlace];

@@ -1,34 +1,28 @@
 export interface Settings {
-    GeoManifest?: {
-    Dynamic?: {
-            Config?: {
-            /**
-                 * [动态配置] 资源清单的国家或地区代码
-                 *
-                 * 此选项影响“地图”整体配置内容，包括以下的地图功能与服务。
-                 *
-                 * @remarks
-                 *
-                 * Possible values:
-                 * - `'AUTO'` - 🇺🇳自动（跟随用户当前所在地区）
-                 * - `'CN'` - 🇨🇳中国大陆
-                 * - `'HK'` - 🇭🇰中国香港
-                 * - `'TW'` - 🇹🇼中国台湾
-                 * - `'SG'` - 🇸🇬新加坡
-                 * - `'US'` - 🇺🇸美国
-                 * - `'JP'` - 🇯🇵日本
-                 * - `'AU'` - 🇦🇺澳大利亚
-                 * - `'GB'` - 🇬🇧英国
-                 * - `'KR'` - 🇰🇷韩国
-                 * - `'CA'` - 🇨🇦加拿大
-                 * - `'IE'` - 🇮🇪爱尔兰
-                 *
-                 * @defaultValue "CN"
-                 */
-                CountryCode?: 'AUTO' | 'CN' | 'HK' | 'TW' | 'SG' | 'US' | 'JP' | 'AU' | 'GB' | 'KR' | 'CA' | 'IE';
-};
-};
-};
+    /**
+     * [地区检测] 地理国家或地区代码
+     *
+     * 要更改为的地区或国家，此选项影响GPS/Wi-Fi/有线网络下国家和地区检测的结果。
+     *
+     * @remarks
+     *
+     * Possible values:
+     * - `'AUTO'` - 🇺🇳自动（跟随地区检测结果）
+     * - `'CN'` - 🇨🇳中国大陆
+     * - `'HK'` - 🇭🇰中国香港
+     * - `'TW'` - 🇹🇼中国台湾
+     * - `'SG'` - 🇸🇬新加坡
+     * - `'US'` - 🇺🇸美国
+     * - `'JP'` - 🇯🇵日本
+     * - `'AU'` - 🇦🇺澳大利亚
+     * - `'GB'` - 🇬🇧英国
+     * - `'KR'` - 🇰🇷韩国
+     * - `'CA'` - 🇨🇦加拿大
+     * - `'IE'` - 🇮🇪爱尔兰
+     *
+     * @defaultValue "US"
+     */
+    GeoCountryCode?: 'AUTO' | 'CN' | 'HK' | 'TW' | 'SG' | 'US' | 'JP' | 'AU' | 'GB' | 'KR' | 'CA' | 'IE';
     UrlInfoSet?: {
     /**
          * [URL信息集] 调度器

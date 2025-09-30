@@ -29,10 +29,10 @@ export default defineConfig({
 	},
 	args: [
 		{
-			defaultValue: "CN",
-			description: "要更改为的地区或国家，此选项影响Wi-Fi或有线网络下国家和地区检测的结果。",
-			key: "PEP.GCC",
-			name: "[动态配置] 资源清单的国家或地区代码",
+			defaultValue: "US",
+			description: "要更改为的地区或国家，此选项影响GPS/Wi-Fi/有线网络下国家和地区检测的结果。",
+			key: "GeoCountryCode",
+			name: "[地区检测] 地理国家或地区代码",
 			options: [
 				{ key: "AUTO", label: "🇺🇳自动（跟随地区检测结果）" },
 				{ key: "CN", label: "🇨🇳中国大陆" },

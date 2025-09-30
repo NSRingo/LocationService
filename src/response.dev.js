@@ -56,11 +56,11 @@ Console.info(`FORMAT: ${FORMAT}`);
 						case "/pep/gcc":
 							_.set(Caches, "pep.gcc", $response.body);
 							Storage.setItem("@iRingo.Location.Caches", Caches);
-							switch (Settings.PEP.GCC) {
+							switch (Settings.GeoCountryCode) {
 								case "AUTO":
 									break;
 								default:
-									$response.body = Settings.PEP.GCC;
+									$response.body = Settings.GeoCountryCode;
 									break;
 							}
 							break;
@@ -155,8 +155,14 @@ Console.info(`FORMAT: ${FORMAT}`);
 									let AppleDispatcher = Caches.Dispatcher.get($request.id);
 									AppleDispatcher = GEOPDPlaceResponse.decode(AppleDispatcher);
 									Console.debug(`AppleDispatcher: ${JSON.stringify(AppleDispatcher, null, 2)}`);
-									// Caches.Dispatcher.delete($request.id);
-									// Storage.setItem("@iRingo.Location.Caches", Caches);
+									switch (Settings.GeoCountryCode) {
+										case "AUTO":
+											body.displayRegion = Caches.PEP?.GCC ?? "US";
+											break;
+										default:
+											body.displayRegion = Settings.GeoCountryCode;
+											break;
+									}
 									body = GEOPDPlaceResponse.composite(body, AppleDispatcher, Settings);
 									Console.debug(`body: ${JSON.stringify(body, null, 2)}`);
 									arpc.message = GEOPDPlaceResponse.encode(body);

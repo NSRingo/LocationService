@@ -180,6 +180,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 										});
 										return result;
 									});
+									body.datasetAbStatus = AppleDispatcher.datasetAbStatus;
 									/******************  initialization start  *******************/
 									Console.debug(`body: ${JSON.stringify(body, null, 2)}`);
 									arpc.message = GEOPDPlaceResponse.encode(body);

@@ -148,12 +148,13 @@ Console.info(`FORMAT: ${FORMAT}`);
 									// 先拆分aRPC校验头和protobuf数据体
 									const arpc = aRPC.response.unpack(rawBody);
 									Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
-									/******************  initialization finish  *******************/
 									body = GEOPDPlaceResponse.decode(arpc.message);
 									Console.debug(`AutoNaviDispatcher: ${JSON.stringify(body, null, 2)}`);
+									/******************  initialization finish  *******************/
 									let AppleDispatcher = Caches.Dispatcher.get($request.id);
 									AppleDispatcher = GEOPDPlaceResponse.decode(AppleDispatcher);
 									Console.debug(`AppleDispatcher: ${JSON.stringify(AppleDispatcher, null, 2)}`);
+									body = GEOPDPlaceResponse.composite(body, AppleDispatcher, Settings);
 									body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
 									body.placeResult = body.placeResult.map(result => {
 										result.component = result.component.map(component => {
@@ -179,11 +180,10 @@ Console.info(`FORMAT: ${FORMAT}`);
 										});
 										return result;
 									});
-									body = GEOPDPlaceResponse.composite(body, AppleDispatcher, Settings);
+									/******************  initialization start  *******************/
 									Console.debug(`body: ${JSON.stringify(body, null, 2)}`);
 									arpc.message = GEOPDPlaceResponse.encode(body);
 									//Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
-									/******************  initialization start  *******************/
 									rawBody = aRPC.pack(arpc);
 									/******************  initialization finish  *******************/
 									break;
@@ -197,9 +197,9 @@ Console.info(`FORMAT: ${FORMAT}`);
 									// 先拆分aRPC校验头和protobuf数据体
 									const arpc = aRPC.response.unpack(rawBody);
 									Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
-									/******************  initialization finish  *******************/
 									body = GEOPDPlaceResponse.decode(arpc.message);
 									Console.debug(`AppleDispatcher: ${JSON.stringify(body, null, 2)}`);
+									/******************  initialization finish  *******************/
 									body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
 									body.placeResult = body.placeResult.map(result => {
 										result.component = result.component.map(component => {
@@ -225,9 +225,9 @@ Console.info(`FORMAT: ${FORMAT}`);
 										});
 										return result;
 									});
+									/******************  initialization start  *******************/
 									arpc.message = GEOPDPlaceResponse.encode(body);
 									//Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
-									/******************  initialization start  *******************/
 									rawBody = aRPC.pack(arpc);
 									/******************  initialization finish  *******************/
 									break;

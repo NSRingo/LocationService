@@ -154,38 +154,19 @@ Console.info(`FORMAT: ${FORMAT}`);
 									let AppleDispatcher = Caches.Dispatcher.get($request.id);
 									AppleDispatcher = GEOPDPlaceResponse.decode(AppleDispatcher);
 									Console.debug(`AppleDispatcher: ${JSON.stringify(AppleDispatcher, null, 2)}`);
-									switch (Settings.GeoCountryCode) {
-										case "AUTO":
-											body.displayRegion = Caches.PEP?.GCC ?? "US";
-											body.placeResult = body.placeResult.map(result => {
-												result.component = result.component.map(component => {
-													component.value = component.value.map(value => {
-														if (value?.iso_3166Code?.countryCode === "CN") {
-															value.iso_3166Code.countryCode = Caches.PEP?.GCC ?? "US";
-														}
-														return value;
-													});
-													return component;
-												});
-												return result;
+									body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+									body.placeResult = body.placeResult.map(result => {
+										result.component = result.component.map(component => {
+											component.value = component.value.map(value => {
+												if (value?.iso_3166Code?.countryCode === "CN") {
+													value.iso_3166Code.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+												}
+												return value;
 											});
-											break;
-										default:
-											body.displayRegion = Settings.GeoCountryCode;
-											body.placeResult = body.placeResult.map(result => {
-												result.component = result.component.map(component => {
-													component.value = component.value.map(value => {
-														if (value?.iso_3166Code?.countryCode === "CN") {
-															value.iso_3166Code.countryCode = Settings.GeoCountryCode;
-														}
-														return value;
-													});
-													return component;
-												});
-												return result;
-											});
-											break;
-									}
+											return component;
+										});
+										return result;
+									});
 									body = GEOPDPlaceResponse.composite(body, AppleDispatcher, Settings);
 									Console.debug(`body: ${JSON.stringify(body, null, 2)}`);
 									arpc.message = GEOPDPlaceResponse.encode(body);
@@ -207,38 +188,19 @@ Console.info(`FORMAT: ${FORMAT}`);
 									/******************  initialization finish  *******************/
 									body = GEOPDPlaceResponse.decode(arpc.message);
 									Console.debug(`AppleDispatcher: ${JSON.stringify(body, null, 2)}`);
-									switch (Settings.GeoCountryCode) {
-										case "AUTO":
-											body.displayRegion = Caches.PEP?.GCC ?? "US";
-											body.placeResult = body.placeResult.map(result => {
-												result.component = result.component.map(component => {
-													component.value = component.value.map(value => {
-														if (value?.iso_3166Code?.countryCode === "CN") {
-															value.iso_3166Code.countryCode = Caches.PEP?.GCC ?? "US";
-														}
-														return value;
-													});
-													return component;
-												});
-												return result;
+									body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+									body.placeResult = body.placeResult.map(result => {
+										result.component = result.component.map(component => {
+											component.value = component.value.map(value => {
+												if (value?.iso_3166Code?.countryCode === "CN") {
+													value.iso_3166Code.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+												}
+												return value;
 											});
-											break;
-										default:
-											body.displayRegion = Settings.GeoCountryCode;
-											body.placeResult = body.placeResult.map(result => {
-												result.component = result.component.map(component => {
-													component.value = component.value.map(value => {
-														if (value?.iso_3166Code?.countryCode === "CN") {
-															value.iso_3166Code.countryCode = Settings.GeoCountryCode;
-														}
-														return value;
-													});
-													return component;
-												});
-												return result;
-											});
-											break;
-									}
+											return component;
+										});
+										return result;
+									});
 									arpc.message = GEOPDPlaceResponse.encode(body);
 									//Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
 									/******************  initialization start  *******************/

@@ -152,7 +152,7 @@ export default class GEOPDPlaceResponse {
 		return rawBody;
 	}
 
-	static composite(AutoNaviDispatcher = {}, AppleDispatcher = {}) {
+	static composite(AutoNaviDispatcher = {}, AppleDispatcher = {}, Settings = {}) {
 		Console.log("☑️ GEOPDPlaceResponse.composite");
 		switch (`${AutoNaviDispatcher.status}|${AppleDispatcher.status}`) {
 			case "STATUS_SUCCESS|FAILED_NO_RESULT":
@@ -162,16 +162,15 @@ export default class GEOPDPlaceResponse {
 				AutoNaviDispatcher = AppleDispatcher;
 				break;
 			case "STATUS_SUCCESS|STATUS_SUCCESS":
+				body.displayRegion = Settings.PEP.GCC;
 				AutoNaviDispatcher.placeResult = GEOPDPlaceResponse.fillMissingByType(AutoNaviDispatcher.placeResult, AppleDispatcher.placeResult, "muid");
 				AutoNaviDispatcher.mapsResult = GEOPDPlaceResponse.fillMissingByType(AutoNaviDispatcher.mapsResult, AppleDispatcher.mapsResult, "resultType");
-				//AutoNaviDispatcher.mapsResult = [...AutoNaviDispatcher.mapsResult, ...AppleDispatcher.mapsResult];
+				AutoNaviDispatcher.dotPlace = [...AutoNaviDispatcher.dotPlace, ...AppleDispatcher.dotPlace];
 				switch (AutoNaviDispatcher.requestType) {
 					case "REQUEST_TYPE_REVERSE_GEOCODING":
-						_.set(AutoNaviDispatcher, "globalResult.reverseGeocodingResult.showResult", true);
+						if (AppleDispatcher.globalResult?.reverseGeocodingResult) AppleDispatcher.globalResult.reverseGeocodingResult.showResult = true;
 						break;
 					case "REQUEST_TYPE_MAPS_HOME":
-						//body.displayRegion = "US";
-						//body.clientMetadata.deviceCountryCode = "US";
 						break;
 				}
 				/*

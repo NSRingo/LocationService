@@ -157,7 +157,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 									Console.debug(`AppleDispatcher: ${JSON.stringify(AppleDispatcher, null, 2)}`);
 									// Caches.Dispatcher.delete($request.id);
 									// Storage.setItem("@iRingo.Location.Caches", Caches);
-									body = GEOPDPlaceResponse.composite(body, AppleDispatcher);
+									body = GEOPDPlaceResponse.composite(body, AppleDispatcher, Settings);
 									Console.debug(`body: ${JSON.stringify(body, null, 2)}`);
 									arpc.message = GEOPDPlaceResponse.encode(body);
 									//Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);

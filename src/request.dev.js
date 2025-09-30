@@ -81,10 +81,8 @@ Console.info(`FORMAT: ${FORMAT}`);
 					let rawBody = $app === "Quantumult X" ? new Uint8Array($request.bodyBytes ?? []) : ($request.body ?? new Uint8Array());
 					//Console.debug(`isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody, null, 2)}`);
 					switch (url.hostname) {
-						case "gsp-ssl.ls.apple.com":
 						case "dispatcher.is.autonavi.com":
 							switch (url.pathname) {
-								case "/dispatcher.arpc":
 								case "/dispatcher": {
 									const AppleDispatcher = await LocationService.Dispatcher($request, Caches);
 									/******************  initialization start  *******************/
@@ -99,7 +97,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 										case "REQUEST_TYPE_REVERSE_GEOCODING":
 											//body.placeRequestParameters.reverseGeocodingParameters.preserveOriginalLocation = false;
 											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "PLACE_QUESTIONNAIRE")) {
-												body.requestedComponent.push({type: "PLACE_QUESTIONNAIRE", count: 1}); // PLACE_QUESTIONNAIRE
+												body.requestedComponent.push({ type: "PLACE_QUESTIONNAIRE", count: 1 }); // PLACE_QUESTIONNAIRE
 											}
 											break;
 										case "REQUEST_TYPE_MAPS_HOME":
@@ -109,6 +107,26 @@ Console.info(`FORMAT: ${FORMAT}`);
 									}
 									//body.displayRegion = "US";
 									//body.clientMetadata.deviceCountryCode = "US";
+									arpc.message = GEOPDPlaceRequest.encode(body);
+									Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
+									/******************  initialization start  *******************/
+									rawBody = aRPC.pack(arpc);
+									/******************  initialization finish  *******************/
+									break;
+								}
+							}
+							break;
+						case "gsp-ssl.ls.apple.com":
+							switch (url.pathname) {
+								case "/dispatcher.arpc": {
+									/******************  initialization start  *******************/
+									// 先拆分aRPC校验头和protobuf数据体
+									const arpc = aRPC.request.unpack(rawBody);
+									Console.debug(`arpc.metadata: ${JSON.stringify(arpc.metadata, null, 2)}`);
+									Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
+									/******************  initialization finish  *******************/
+									body = GEOPDPlaceRequest.decode(arpc.message);
+									Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
 									arpc.message = GEOPDPlaceRequest.encode(body);
 									Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
 									/******************  initialization start  *******************/

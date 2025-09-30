@@ -167,6 +167,18 @@ Console.info(`FORMAT: ${FORMAT}`);
 										});
 										return result;
 									});
+									body.mapsResult = body.mapsResult.map(result => {
+										if (result.place) result.place.component = result.place.component.map(component => {
+											component.value = component.value.map(value => {
+												if (value?.iso_3166Code?.countryCode === "CN") {
+													value.iso_3166Code.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+												}
+												return value;
+											});
+											return component;
+										});
+										return result;
+									});
 									body = GEOPDPlaceResponse.composite(body, AppleDispatcher, Settings);
 									Console.debug(`body: ${JSON.stringify(body, null, 2)}`);
 									arpc.message = GEOPDPlaceResponse.encode(body);
@@ -191,6 +203,18 @@ Console.info(`FORMAT: ${FORMAT}`);
 									body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
 									body.placeResult = body.placeResult.map(result => {
 										result.component = result.component.map(component => {
+											component.value = component.value.map(value => {
+												if (value?.iso_3166Code?.countryCode === "CN") {
+													value.iso_3166Code.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+												}
+												return value;
+											});
+											return component;
+										});
+										return result;
+									});
+									body.mapsResult = body.mapsResult.map(result => {
+										if (result.place) result.place.component = result.place.component.map(component => {
 											component.value = component.value.map(value => {
 												if (value?.iso_3166Code?.countryCode === "CN") {
 													value.iso_3166Code.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");

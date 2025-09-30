@@ -97,8 +97,13 @@ Console.info(`FORMAT: ${FORMAT}`);
 										case "REQUEST_TYPE_REVERSE_GEOCODING":
 											//body.placeRequestParameters.reverseGeocodingParameters.preserveOriginalLocation = false;
 											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "PLACE_QUESTIONNAIRE")) {
-												body.requestedComponent.push({ type: "PLACE_QUESTIONNAIRE", count: 1 }); // PLACE_QUESTIONNAIRE
+												body.requestedComponent.push({ type: "PLACE_QUESTIONNAIRE", count: 1 }); // 73 - PLACE_QUESTIONNAIRE
 											}
+											/*
+											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "LABEL_GEOMETRY")) {
+												body.requestedComponent.push({ type: "LABEL_GEOMETRY", count: 1 }); // 87 - LABEL_GEOMETRY
+											}
+											*/
 											break;
 										case "REQUEST_TYPE_MAPS_HOME":
 											//body.displayRegion = "US";

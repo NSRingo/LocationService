@@ -141,10 +141,8 @@ Console.info(`FORMAT: ${FORMAT}`);
 				case "application/vnd.google.protobuf":
 				case "application/octet-stream":
 					switch (url.hostname) {
-						//case "gsp-ssl.ls.apple.com":
 						case "dispatcher.is.autonavi.com":
 							switch (url.pathname) {
-								//case "/dispatcher.arpc":
 								case "/dispatcher": {
 									/******************  initialization start  *******************/
 									// 先拆分aRPC校验头和protobuf数据体
@@ -152,19 +150,95 @@ Console.info(`FORMAT: ${FORMAT}`);
 									Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
 									/******************  initialization finish  *******************/
 									body = GEOPDPlaceResponse.decode(arpc.message);
+									Console.debug(`AutoNaviDispatcher: ${JSON.stringify(body, null, 2)}`);
 									let AppleDispatcher = Caches.Dispatcher.get($request.id);
 									AppleDispatcher = GEOPDPlaceResponse.decode(AppleDispatcher);
 									Console.debug(`AppleDispatcher: ${JSON.stringify(AppleDispatcher, null, 2)}`);
 									switch (Settings.GeoCountryCode) {
 										case "AUTO":
 											body.displayRegion = Caches.PEP?.GCC ?? "US";
+											body.placeResult = body.placeResult.map(result => {
+												result.component = result.component.map(component => {
+													component.value = component.value.map(value => {
+														if (value?.iso_3166Code?.countryCode === "CN") {
+															value.iso_3166Code.countryCode = Caches.PEP?.GCC ?? "US";
+														}
+														return value;
+													});
+													return component;
+												});
+												return result;
+											});
 											break;
 										default:
 											body.displayRegion = Settings.GeoCountryCode;
+											body.placeResult = body.placeResult.map(result => {
+												result.component = result.component.map(component => {
+													component.value = component.value.map(value => {
+														if (value?.iso_3166Code?.countryCode === "CN") {
+															value.iso_3166Code.countryCode = Settings.GeoCountryCode;
+														}
+														return value;
+													});
+													return component;
+												});
+												return result;
+											});
 											break;
 									}
 									body = GEOPDPlaceResponse.composite(body, AppleDispatcher, Settings);
 									Console.debug(`body: ${JSON.stringify(body, null, 2)}`);
+									arpc.message = GEOPDPlaceResponse.encode(body);
+									//Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
+									/******************  initialization start  *******************/
+									rawBody = aRPC.pack(arpc);
+									/******************  initialization finish  *******************/
+									break;
+								}
+							}
+							break;
+						case "gsp-ssl.ls.apple.com":
+							switch (url.pathname) {
+								case "/dispatcher.arpc": {
+									/******************  initialization start  *******************/
+									// 先拆分aRPC校验头和protobuf数据体
+									const arpc = aRPC.response.unpack(rawBody);
+									Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
+									/******************  initialization finish  *******************/
+									body = GEOPDPlaceResponse.decode(arpc.message);
+									Console.debug(`AppleDispatcher: ${JSON.stringify(body, null, 2)}`);
+									switch (Settings.GeoCountryCode) {
+										case "AUTO":
+											body.displayRegion = Caches.PEP?.GCC ?? "US";
+											body.placeResult = body.placeResult.map(result => {
+												result.component = result.component.map(component => {
+													component.value = component.value.map(value => {
+														if (value?.iso_3166Code?.countryCode === "CN") {
+															value.iso_3166Code.countryCode = Caches.PEP?.GCC ?? "US";
+														}
+														return value;
+													});
+													return component;
+												});
+												return result;
+											});
+											break;
+										default:
+											body.displayRegion = Settings.GeoCountryCode;
+											body.placeResult = body.placeResult.map(result => {
+												result.component = result.component.map(component => {
+													component.value = component.value.map(value => {
+														if (value?.iso_3166Code?.countryCode === "CN") {
+															value.iso_3166Code.countryCode = Settings.GeoCountryCode;
+														}
+														return value;
+													});
+													return component;
+												});
+												return result;
+											});
+											break;
+									}
 									arpc.message = GEOPDPlaceResponse.encode(body);
 									//Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
 									/******************  initialization start  *******************/

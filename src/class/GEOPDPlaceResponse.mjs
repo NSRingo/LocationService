@@ -239,23 +239,59 @@ export default class GEOPDPlaceResponse {
 		Apple.forEach(result => allKey.add(result[Key]));
 
 		for (const key of allKey) {
-			const AutoNaviArray = AutoNavi.filter(result => result[Key] === key);
-			const AppleArray = Apple.filter(result => result[Key] === key);
-			const successAutoNaviArray = AutoNaviArray.filter(result => result.status === "STATUS_SUCCESS");
-			const successAppleArray = AppleArray.filter(result => result.status === "STATUS_SUCCESS");
-			switch (`${successAutoNaviArray.length > 0}|${successAppleArray.length > 0}`) {
-				case "true|true":
-					Result.push(...successAppleArray);
-					Result.push(...successAutoNaviArray);
+			let AutoNaviArray = AutoNavi.filter(result => result[Key] === key);
+			let AppleArray = Apple.filter(result => result[Key] === key);
+			switch (Key) {
+				case "resultType":
 					break;
-				case "true|false":
-					Result.push(...successAutoNaviArray);
+				case "muid":
+				case "type":
+				default:
+					AutoNaviArray = AutoNaviArray.filter(result => result.status === "STATUS_SUCCESS");
+					AppleArray = AppleArray.filter(result => result.status === "STATUS_SUCCESS");
 					break;
-				case "false|true":
-					Result.push(...successAppleArray);
+			}
+			switch (`${AutoNaviArray.length}|${AppleArray.length}`) {
+				case "0|0":
+					Result.push(...AutoNaviArray);
 					break;
-				case "false|false":
+				case `${AutoNaviArray.length}|0`:
+					Result.push(...AutoNaviArray);
+					break;
+				case `0|${AppleArray.length}`:
 					Result.push(...AppleArray);
+					break;
+				case "1|1":
+					const autoNavi = AutoNaviArray[0];
+					const apple = AppleArray[0];
+					switch (key) {
+						case "PLACE":
+							const autoNaviCountryCode = autoNavi.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
+							const appleCountryCode = apple.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
+							switch (`${autoNaviCountryCode}|${appleCountryCode}`) {
+								case "CN|CN":
+									Result.push(autoNavi);
+									break;
+								case `CN|${appleCountryCode}`:
+									Result.push(autoNavi);
+									break;
+								case `${autoNaviCountryCode}|CN`:
+									Result.push(apple);
+									break;
+								case `${autoNaviCountryCode}|${appleCountryCode}`:
+									Result.push(apple);
+									break;
+							}
+							break;
+						default:
+							Result.push(...AppleArray);
+							Result.push(...AutoNaviArray);
+							break;
+					}
+					break;
+				case `${AutoNaviArray.length}|${AppleArray.length}`:
+					Result.push(...AppleArray);
+					Result.push(...AutoNaviArray);
 					break;
 			}
 		}

@@ -251,29 +251,48 @@ export default class GEOPDPlaceResponse {
 					AppleArray = AppleArray.filter(result => result.status === "STATUS_SUCCESS");
 					break;
 			}
-			switch (`${AutoNaviArray.length > 0}|${AppleArray.length > 0}`) {
-				case "false|false":
+			switch (`${AutoNaviArray.length}|${AppleArray.length}`) {
+				case "0|0":
+					// 两者都没有
 					break;
-				case "true|false":
+				case "1|1": {
+					// 两者都只有 1 个
+					const autoNavi = AutoNaviArray[0], apple = AppleArray[0];
+					switch (key) {
+						case "PLACE":
+							apple.place.component = GEOPDPlaceResponse.fillMissingByType(autoNavi.place.component, apple.place.component, "muid");
+							Result.push(apple);
+							break;
+						case "COLLECTION":
+						case "PUBLISHER":
+							Result.push(apple);
+							break;
+						default:
+							Result.push(apple);
+							//Result.push(...autoNavi);
+							break;
+					}
+					break;
+				}
+				case `${AutoNaviArray.length}|0`:
+					// 只有高德有
 					Result.push(...AutoNaviArray);
 					break;
-				case "false|true":
+				case `0|${AppleArray.length}`:
+					// 只有苹果有
 					Result.push(...AppleArray);
 					break;
-				case "true|true":
+				case `${AutoNaviArray.length}|${AppleArray.length}`:
+					// 两者都有大于 1 个的
 					switch (key) {
 						case "PLACE": {
 							AutoNaviArray.forEach(autoNavi => {
-								if (autoNavi.place.status === "STATUS_SUCCESS") {
-									const autoNaviCountryCode = autoNavi.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
-									if (autoNaviCountryCode === "CN") Result.push(autoNavi);
-								}
+								const autoNaviCountryCode = autoNavi.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
+								if (autoNaviCountryCode === "CN") Result.push(autoNavi);
 							});
 							AppleArray.forEach(apple => {
-								if (apple.place.status === "STATUS_SUCCESS") {
-									const appleCountryCode = apple.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
-									if (appleCountryCode !== "CN") Result.push(apple);
-								}
+								const appleCountryCode = apple.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
+								if (appleCountryCode !== "CN") Result.push(apple);
 								if (Result.length === 0) Result.push(apple); // 至少要有一个结果
 							});
 							break;

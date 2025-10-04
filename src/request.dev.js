@@ -207,46 +207,8 @@ Console.info(`FORMAT: ${FORMAT}`);
 				case "gspe35-ssl.ls.apple.cn":
 					switch (url.pathname) {
 						case "/config/announcements":
-							switch (Settings?.Config?.Announcements?.Environment) {
-								case "AUTO":
-									/*
-									switch (Caches?.pep?.gcc) {
-										default:
-											url.searchParams.set("environment", "prod");
-											break;
-										case "CN":
-										case undefined:
-											url.searchParams.set("environment", "prod-cn");
-											break;
-									};
-									*/
-									break;
-								case "CN":
-								default:
-									url.searchParams.set("environment", "prod-cn");
-									break;
-								case "XX":
-									url.searchParams.set("environment", "prod");
-									break;
-							}
 							break;
 						case "/geo_manifest/dynamic/config":
-							switch (Settings?.GeoManifest?.Dynamic?.Config?.CountryCode) {
-								case "AUTO":
-									switch (Caches?.pep?.gcc) {
-										default:
-											url.searchParams.set("country_code", Caches?.pep?.gcc ?? "US");
-											break;
-										case "CN":
-										case undefined:
-											url.searchParams.set("country_code", "CN");
-											break;
-									}
-									break;
-								default:
-									url.searchParams.set("country_code", Settings?.GeoManifest?.Dynamic?.Config?.CountryCode ?? "CN");
-									break;
-							}
 							break;
 					}
 					break;

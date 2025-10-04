@@ -4,7 +4,7 @@ import { MapsResultType, StatusCode } from "../proto/apple/geo/protobuf/geo3.js"
 import { ComponentType, Component_CacheControlType, MapsHomeResult_MapsHomeSectionType, GuidesHomeFixedSectionType, GuidesHomeRepeatableSectionType, GuidesHomeRepeatableSectionContentType, PlaceResponse, PlaceRequestType } from "../proto/apple/geo/protobuf/geo3/placedata.js";
 export default class GEOPDPlaceResponse {
 	static decode(rawBody = new Uint8Array([])) {
-		console.log("☑️ GEOPDPlaceResponse.decode");
+		Console.log("☑️ GEOPDPlaceResponse.decode");
 		switch (true) {
 			case typeof rawBody === "string": // base64 string
 				rawBody = new Uint8Array(Buffer.from(rawBody, "base64"));
@@ -232,6 +232,7 @@ export default class GEOPDPlaceResponse {
 	 * @param {string} key 用以比较的属性名（这里是 "type"）
 	 */
 	static fillMissingByType(AutoNavi = [], Apple = [], Key = "type") {
+		Console.log("☑️ GEOPDPlaceResponse.fillMissingByType");
 		const Result = [];
 
 		const allKey = new Set();
@@ -321,6 +322,7 @@ export default class GEOPDPlaceResponse {
 					break;
 			}
 		}
+		Console.log("✅ GEOPDPlaceResponse.fillMissingByType");
 		// 返回 Result，方便链式或调用使用
 		return Result;
 	}

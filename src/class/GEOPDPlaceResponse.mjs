@@ -257,12 +257,24 @@ export default class GEOPDPlaceResponse {
 					break;
 				case "1|1": {
 					// 两者都只有 1 个
-					const autoNavi = AutoNaviArray[0], apple = AppleArray[0];
+					const autoNavi = AutoNaviArray[0],
+						apple = AppleArray[0];
 					switch (key) {
-						case "PLACE":
-							apple.place.component = GEOPDPlaceResponse.fillMissingByType(autoNavi.place.component, apple.place.component, "muid");
-							Result.push(apple);
+						case "PLACE": {
+							const autoNaviCountryCode = autoNavi.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
+							const appleCountryCode = apple.place.component.find(component => component.type === "ISO_3166_CODE")?.value?.[0]?.iso3166Code?.countryCode;
+							switch (`${autoNaviCountryCode}|${appleCountryCode}`) {
+								case "CN|CN":
+								case `${autoNaviCountryCode}|CN`:
+								case `CN|${appleCountryCode}`:
+									Result.push(autoNavi);
+									break;
+								default:
+									Result.push(apple);
+									break;
+							}
 							break;
+						}
 						case "COLLECTION":
 						case "PUBLISHER":
 							Result.push(apple);

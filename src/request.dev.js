@@ -168,6 +168,8 @@ Console.info(`FORMAT: ${FORMAT}`);
 					switch (url.pathname) {
 						case "/dispatcher.arpc":
 						case "/dispatcher":
+							Console.debug(`x-apple-maps-app-identifier: ${$request.headers["x-apple-maps-app-identifier"]}`);
+							// 重定向
 							switch (Settings.Redirect.Dispatcher) {
 								case "AUTO":
 								default:

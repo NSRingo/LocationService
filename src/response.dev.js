@@ -156,7 +156,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 									/******************  initialization start  *******************/
 									Console.debug(`body: ${JSON.stringify(body, null, 2)}`);
 									arpc.message = GEOPDPlaceResponse.encode(body);
-									//Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
+									Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
 									rawBody = aRPC.pack(arpc);
 									/******************  initialization finish  *******************/
 									break;

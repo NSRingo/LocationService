@@ -175,33 +175,6 @@ Console.info(`FORMAT: ${FORMAT}`);
 									Console.debug(`AppleDispatcher: ${JSON.stringify(body, null, 2)}`);
 									/******************  initialization finish  *******************/
 									body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
-									body.placeResult = body.placeResult.map(result => {
-										result.component = result.component.map(component => {
-											const type = component.type;
-											const value = component.value[0];
-											switch (type) {
-												case "ADDRESS": {
-													const address = value.address;
-													const localizedAddress = address.localizedAddress[0];
-													const structuredAddress = localizedAddress.address.structuredAddress;
-													if (structuredAddress?.countryCode === "CN") {
-														structuredAddress.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
-													}
-													break;
-												}
-												case "ISO_3166_CODE": {
-													const iso3166Code = value.iso3166Code;
-													if (iso3166Code?.countryCode === "CN") {
-														iso3166Code.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
-														delete iso3166Code.subdivisonCode; // 删除子区域代码，以简化地理信息处理
-													}
-													break;
-												}
-											}
-											return component;
-										});
-										return result;
-									});
 									body.mapsResult = body.mapsResult.map(result => {
 										if (result.place)
 											result.place.component = result.place.component.map(component => {

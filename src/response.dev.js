@@ -128,31 +128,35 @@ Console.info(`FORMAT: ${FORMAT}`);
 									body = GEOPDPlaceResponse.composite(body, AppleDispatcher, Settings);
 									body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
 									body.mapsResult = body.mapsResult.map(result => {
-										if (result.place)
-											result.place.component = result.place.component.map(component => {
-												const type = component.type;
-												const value = component.value[0];
-												switch (type) {
-													case "ADDRESS": {
-														const address = value.address;
-														const localizedAddress = address.localizedAddress[0];
-														const structuredAddress = localizedAddress.address.structuredAddress;
-														if (structuredAddress?.countryCode === "CN") {
-															structuredAddress.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+										const resultType = result.resultType;
+										switch (resultType) {
+											case "PLACE":
+												result.place.component = result.place.component.map(component => {
+													const type = component.type;
+													const value = component.value[0];
+													switch (type) {
+														case "ADDRESS": {
+															const address = value?.address;
+															const localizedAddress = address.localizedAddress[0];
+															const structuredAddress = localizedAddress.address.structuredAddress;
+															if (structuredAddress?.countryCode === "CN") {
+																structuredAddress.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+															}
+															break;
 														}
-														break;
-													}
-													case "ISO_3166_CODE": {
-														const iso3166Code = value.iso3166Code;
-														if (iso3166Code?.countryCode === "CN") {
-															iso3166Code.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
-															delete iso3166Code.subdivisonCode; // 删除子区域代码，以简化地理信息处理
+														case "ISO_3166_CODE": {
+															const iso3166Code = value?.iso3166Code;
+															if (iso3166Code?.countryCode === "CN") {
+																iso3166Code.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+																delete iso3166Code.subdivisonCode; // 删除子区域代码，以简化地理信息处理
+															}
+															break;
 														}
-														break;
 													}
-												}
-												return component;
-											});
+													return component;
+												});
+												break;
+										}
 										return result;
 									});
 									body.datasetAbStatus = AppleDispatcher.datasetAbStatus;
@@ -177,35 +181,6 @@ Console.info(`FORMAT: ${FORMAT}`);
 									body = GEOPDPlaceResponse.decode(arpc.message);
 									Console.debug(`AppleDispatcher: ${JSON.stringify(body, null, 2)}`);
 									/******************  initialization finish  *******************/
-									body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
-									body.mapsResult = body.mapsResult.map(result => {
-										if (result.place)
-											result.place.component = result.place.component.map(component => {
-												const type = component.type;
-												const value = component.value[0];
-												switch (type) {
-													case "ADDRESS": {
-														const address = value.address;
-														const localizedAddress = address.localizedAddress[0];
-														const structuredAddress = localizedAddress.address.structuredAddress;
-														if (structuredAddress?.countryCode === "CN") {
-															structuredAddress.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
-														}
-														break;
-													}
-													case "ISO_3166_CODE": {
-														const iso3166Code = value.iso3166Code;
-														if (iso3166Code?.countryCode === "CN") {
-															iso3166Code.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
-															delete iso3166Code.subdivisonCode; // 删除子区域代码，以简化地理信息处理
-														}
-														break;
-													}
-												}
-												return component;
-											});
-										return result;
-									});
 									/******************  initialization start  *******************/
 									arpc.message = GEOPDPlaceResponse.encode(body);
 									//Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);

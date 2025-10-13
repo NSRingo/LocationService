@@ -130,8 +130,9 @@ Console.info(`FORMAT: ${FORMAT}`);
 									body.mapsResult = body.mapsResult.map(result => {
 										const resultType = result.resultType;
 										switch (resultType) {
-											case "PLACE":
-												result.place.component = result.place.component.map(component => {
+											case "PLACE": {
+												const place = result.place;
+												place.component = place.component.map(component => {
 													const type = component.type;
 													const value = component.value[0];
 													switch (type) {
@@ -156,6 +157,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 													return component;
 												});
 												break;
+											}
 										}
 										return result;
 									});

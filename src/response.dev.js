@@ -120,11 +120,11 @@ Console.info(`FORMAT: ${FORMAT}`);
 									const arpc = aRPC.response.unpack(rawBody);
 									Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
 									body = GEOPDPlaceResponse.decode(arpc.message);
-									Console.debug(`AutoNaviDispatcher: ${JSON.stringify(body, null, 2)}`);
+									//Console.debug(`AutoNaviDispatcher: ${JSON.stringify(body, null, 2)}`);
 									/******************  initialization finish  *******************/
 									let AppleDispatcher = Caches.Dispatcher.get($request.id);
 									AppleDispatcher = GEOPDPlaceResponse.decode(AppleDispatcher);
-									Console.debug(`AppleDispatcher: ${JSON.stringify(AppleDispatcher, null, 2)}`);
+									//Console.debug(`AppleDispatcher: ${JSON.stringify(AppleDispatcher, null, 2)}`);
 									body = GEOPDPlaceResponse.composite(body, AppleDispatcher, Settings);
 									body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
 									body.placeResult = body.placeResult.map(result => {

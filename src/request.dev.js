@@ -104,6 +104,12 @@ Console.info(`FORMAT: ${FORMAT}`);
 												body.requestedComponent.push({ type: "LABEL_GEOMETRY", count: 1 }); // 87 - LABEL_GEOMETRY
 											}
 											*/
+											switch (body.analyticMetadata.appIdentifier) {
+												case "com.apple.news":
+													_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lat", 40.7484523);
+													_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lng", -73.9859028);
+													break;
+											}
 											break;
 										case "REQUEST_TYPE_MAPS_HOME":
 											//body.displayRegion = "US";

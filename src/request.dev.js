@@ -90,9 +90,9 @@ Console.info(`FORMAT: ${FORMAT}`);
 									const arpc = aRPC.request.unpack(rawBody);
 									Console.debug(`arpc.metadata: ${JSON.stringify(arpc.metadata, null, 2)}`);
 									Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
+									//Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
 									/******************  initialization finish  *******************/
 									body = GEOPDPlaceRequest.decode(arpc.message);
-									Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
 									switch (body.requestType) {
 										case "REQUEST_TYPE_REVERSE_GEOCODING":
 											//body.placeRequestParameters.reverseGeocodingParameters.preserveOriginalLocation = false;
@@ -118,9 +118,10 @@ Console.info(`FORMAT: ${FORMAT}`);
 									}
 									//body.displayRegion = "US";
 									//body.clientMetadata.deviceCountryCode = "US";
+									/******************  initialization start  *******************/
+									Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
 									arpc.message = GEOPDPlaceRequest.encode(body);
 									Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
-									/******************  initialization start  *******************/
 									rawBody = aRPC.pack(arpc);
 									/******************  initialization finish  *******************/
 									break;

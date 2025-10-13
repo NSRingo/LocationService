@@ -120,7 +120,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 									const arpc = aRPC.response.unpack(rawBody);
 									Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
 									body = GEOPDPlaceResponse.decode(arpc.message);
-									//Console.debug(`AutoNaviDispatcher: ${JSON.stringify(body, null, 2)}`);
+									//Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
 									/******************  initialization finish  *******************/
 									let AppleDispatcher = Caches.Dispatcher.get($request.id);
 									AppleDispatcher = GEOPDPlaceResponse.decode(AppleDispatcher);
@@ -163,7 +163,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 									});
 									body.datasetAbStatus = AppleDispatcher.datasetAbStatus;
 									/******************  initialization start  *******************/
-									Console.debug(`body: ${JSON.stringify(body, null, 2)}`);
+									Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
 									arpc.message = GEOPDPlaceResponse.encode(body);
 									Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
 									rawBody = aRPC.pack(arpc);

@@ -180,6 +180,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 											component.value = component.value.map(value => {
 												if (value.iso3166Code?.countryCode === "CN") {
 													value.iso3166Code.countryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+													delete value.iso3166Code?.subdivisonCode;
 												}
 												return value;
 											});

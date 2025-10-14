@@ -109,6 +109,11 @@ Console.info(`FORMAT: ${FORMAT}`);
 													_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lat", 40.7484523);
 													_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lng", -73.9859028);
 													break;
+												default:
+													if (body?.placeRequestParameters?.reverseGeocodingParameters?.preserveOriginalLocation) {
+														_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lat", 40.7484523);
+														_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lng", -73.9859028);
+													}
 											}
 											break;
 										case "REQUEST_TYPE_MAPS_HOME":

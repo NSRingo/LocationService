@@ -1,5 +1,4 @@
 import { $app, Console, done, Lodash as _ } from "@nsnanocat/util";
-import coordtransform from "coordtransform";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
 import aRPC from "./aRPC/aRPC.mjs";
@@ -110,20 +109,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 													_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lat", 40.7484523);
 													_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lng", -73.9859028);
 													break;
-												default: {
-													body.placeRequestParameters.reverseGeocodingParameters.location = body.placeRequestParameters.reverseGeocodingParameters.location.map(latLng => locationShift(latLng));
-													body.placeRequestParameters.reverseGeocodingParameters.extendedLocation = body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.map(location => {
-														location.latLng = locationShift(location.latLng);
-														return location;
-													});
-												}
 											}
-											break;
-										case "REQUEST_TYPE_BATCH_REVERSE_GEOCODING":
-											body.placeRequestParameters.batchReverseGeocodingParameters.assetLocation = body.placeRequestParameters.batchReverseGeocodingParameters.assetLocation.map(location => {
-												location.latLng = locationShift(location.latLng);
-												return location;
-											});
 											break;
 										case "REQUEST_TYPE_MAPS_HOME":
 											//body.displayRegion = "US";
@@ -273,13 +259,3 @@ Console.info(`FORMAT: ${FORMAT}`);
 				break;
 		}
 	});
-
-function locationShift(latLng = {}) {
-	Console.log("☑️ locationShift");
-	const gcj02towgs84 = coordtransform.gcj02towgs84(latLng.lng, latLng.lat);
-	latLng.lat = gcj02towgs84[1];
-	latLng.lng = gcj02towgs84[0];
-	Console.log(`✅ locationShift: ${JSON.stringify(latLng)}`);
-	Console.log("✅ locationShift");
-	return latLng;
-}

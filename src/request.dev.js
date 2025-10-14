@@ -106,15 +106,30 @@ Console.info(`FORMAT: ${FORMAT}`);
 											*/
 											switch (body.analyticMetadata.appIdentifier) {
 												case "com.apple.news":
+												case "com.apple.networkserviceproxy":
+												case "com.apple.CoreRoutine.helperservice": //?
 													_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lat", 40.748441);
 													_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lng", -73.985664);
 													break;
+												case "com.apple.Maps":
+												case "com.apple.NanoMaps":
 												default:
+													body.placeRequestParameters.reverseGeocodingParameters.extendedLocation = body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.map(location => {
+														if (location.timestamp) {
+															_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lat", 40.748441);
+															_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lng", -73.985664);
+														}
+													});
 													if (body?.placeRequestParameters?.reverseGeocodingParameters?.preserveOriginalLocation) {
-														_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lat", 40.748441);
-														_.set(body, "placeRequestParameters.reverseGeocodingParameters.extendedLocation[0].latLng.lng", -73.985664);
 													}
-
+													break;
+												case "com.apple.weather":
+												case "com.apple.weatherd":
+												case "com.apple.nanoweatherd":
+												case "com.apple.weather.widget":
+												case "com.apple.photoanalysisd":
+												case "com.apple.MapsSuggestions":
+													break;
 											}
 											break;
 										case "REQUEST_TYPE_MAPS_HOME":

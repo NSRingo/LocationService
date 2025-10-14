@@ -105,6 +105,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 											}
 											*/
 											switch (body.analyticMetadata.appIdentifier) {
+												case "symptomsd-helper": //?
 												case "com.apple.news":
 												case "com.apple.networkserviceproxy":
 												case "com.apple.CoreRoutine.helperservice": //?

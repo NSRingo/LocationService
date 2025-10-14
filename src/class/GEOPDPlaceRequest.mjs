@@ -13,6 +13,11 @@ export default class GEOPDPlaceRequest {
 			});
 		if (typeof body?.clientMetadata?.knownClientResolvedType !== "undefined") body.clientMetadata.knownClientResolvedType = body.clientMetadata.knownClientResolvedType.map(knownClientResolvedType => ResolvedItemType[knownClientResolvedType]);
 		if (typeof body?.clientMetadata?.deviceExtendedLocation?.type !== "undefined") body.clientMetadata.deviceExtendedLocation.type = Location_LocationType[body.clientMetadata.deviceExtendedLocation.type];
+		if (typeof body?.clientMetadata?.deviceHistoricalLocation !== "undefined")
+			body.clientMetadata.deviceHistoricalLocation = body.clientMetadata.deviceHistoricalLocation.map(location => {
+				if (typeof location.type !== "undefined") location.type = Location_LocationType[location.type];
+				return location;
+			});
 		if (typeof body?.clientMetadata?.supportedMapsResultType !== "undefined") body.clientMetadata.supportedMapsResultType = body.clientMetadata.supportedMapsResultType.map(supportedMapsResultType => MapsResultType[supportedMapsResultType]);
 		if (typeof body?.clientMetadata?.clientRevisions !== "undefined") body.clientMetadata.clientRevisions = body.clientMetadata.clientRevisions.map(clientRevision => ClientMetadata_ClientRevision[clientRevision]);
 		if (typeof body?.clientMetadata?.localizationCapabilities?.supportedPhoneticType !== "undefined") body.clientMetadata.localizationCapabilities.supportedPhoneticType = body.clientMetadata.localizationCapabilities.supportedPhoneticType.map(supportedPhoneticType => NameInfo_PhoneticType[supportedPhoneticType]);
@@ -37,6 +42,11 @@ export default class GEOPDPlaceRequest {
 			});
 		if (typeof body?.clientMetadata?.knownClientResolvedType !== "undefined") body.clientMetadata.knownClientResolvedType = body.clientMetadata.knownClientResolvedType.map(knownClientResolvedType => ResolvedItemType[knownClientResolvedType]);
 		if (typeof body?.clientMetadata?.supportedMapsResultType !== "undefined") body.clientMetadata.supportedMapsResultType = body.clientMetadata.supportedMapsResultType.map(supportedMapsResultType => MapsResultType[supportedMapsResultType]);
+		if (typeof body?.clientMetadata?.deviceHistoricalLocation !== "undefined")
+			body.clientMetadata.deviceHistoricalLocation = body.clientMetadata.deviceHistoricalLocation.map(location => {
+				if (typeof location.type !== "undefined") location.type = Location_LocationType[location.type];
+				return location;
+			});
 		if (typeof body?.clientMetadata?.deviceExtendedLocation?.type !== "undefined") body.clientMetadata.deviceExtendedLocation.type = Location_LocationType[body.clientMetadata.deviceExtendedLocation.type];
 		if (typeof body?.clientMetadata?.clientRevisions !== "undefined") body.clientMetadata.clientRevisions = body.clientMetadata.clientRevisions.map(clientRevision => ClientMetadata_ClientRevision[clientRevision]);
 		if (typeof body?.clientMetadata?.localizationCapabilities?.supportedPhoneticType !== "undefined") body.clientMetadata.localizationCapabilities.supportedPhoneticType = body.clientMetadata.localizationCapabilities.supportedPhoneticType.map(supportedPhoneticType => NameInfo_PhoneticType[supportedPhoneticType]);

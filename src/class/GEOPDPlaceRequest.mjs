@@ -1,7 +1,7 @@
 import { Console } from "@nsnanocat/util";
 //import { MESSAGE_TYPE, reflectionMergePartial, BinaryReader, WireType, UnknownFieldHandler, isJsonObject, typeofJsonValue, jsonWriteOptions, MessageType } from "@protobuf-ts/runtime";
 import { Location_LocationType, GeoServiceType, MapsResultType, NameInfo_PhoneticType } from "../proto/apple/geo/protobuf/geo3.js";
-import { ResolvedItemType, ClientMetadata_ClientRevision, ComponentType, PlaceRequest, PlaceRequestType } from "../proto/apple/geo/protobuf/geo3/placedata.js";
+import { ResolvedItemType, ClientMetadata_ClientRevision, ComponentType, PlaceRequest, PlaceRequestType, PlaceType } from "../proto/apple/geo/protobuf/geo3/placedata.js";
 export default class GEOPDPlaceRequest {
 	static decode(rawBody = new Uint8Array([])) {
 		Console.log("☑️ GEOPDPlaceRequest.decode");
@@ -23,6 +23,7 @@ export default class GEOPDPlaceRequest {
 			});
 		if (typeof body?.requestType !== "undefined") body.requestType = PlaceRequestType[body.requestType];
 		if (typeof body?.placeRequestParameters?.reverseGeocodingParameters?.extendedLocation?.type !== "undefined") body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.type = Location_LocationType[body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.type];
+		if (typeof body?.placeRequestParameters?.batchReverseGeocodingParameters?.additionalPlaceType !== "undefined") body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType = PlaceType[body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType];
 		Console.log("✅ GEOPDPlaceRequest.decode");
 		return body;
 	}
@@ -46,6 +47,7 @@ export default class GEOPDPlaceRequest {
 			});
 		if (typeof body.requestType !== "undefined") body.requestType = PlaceRequestType[body.requestType];
 		if (typeof body?.placeRequestParameters?.reverseGeocodingParameters?.extendedLocation?.type !== "undefined") body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.type = Location_LocationType[body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.type];
+		if (typeof body?.placeRequestParameters?.batchReverseGeocodingParameters?.additionalPlaceType !== "undefined") body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType = PlaceType[body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType];
 		const rawBody = PlaceRequest.toBinary(body);
 		Console.log("✅ GEOPDPlaceRequest.encode");
 		return rawBody;

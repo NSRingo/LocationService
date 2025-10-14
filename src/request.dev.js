@@ -109,10 +109,8 @@ Console.info(`FORMAT: ${FORMAT}`);
 												case "com.apple.networkserviceproxy":
 												case "com.apple.CoreRoutine.helperservice": //?
 													body.placeRequestParameters.reverseGeocodingParameters.extendedLocation = body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.map(location => {
-														if (location.timestamp) {
-															location.latLng.lat = 40.748441;
-															location.latLng.lng = -73.985664;
-														}
+														location.latLng.lat = 40.748441;
+														location.latLng.lng = -73.985664;
 														return location;
 													});
 													break;

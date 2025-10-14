@@ -276,9 +276,9 @@ Console.info(`FORMAT: ${FORMAT}`);
 
 function locationShift(latLng = {}) {
 	Console.log("☑️ locationShift");
-	const gcj02towgs84 = coordtransform.gcj02towgs84(latLng.lng, latLng.lat);
-	latLng.lat = gcj02towgs84[1];
-	latLng.lng = gcj02towgs84[0];
+	const wgs84togcj02=coordtransform.wgs84togcj02(latLng.lng, latLng.lat);
+	latLng.lng = wgs84togcj02[0];
+	latLng.lat = wgs84togcj02[1];
 	Console.log(`✅ locationShift: ${JSON.stringify(latLng)}`);
 	Console.log("✅ locationShift");
 	return latLng;

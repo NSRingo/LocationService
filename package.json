@@ -45,7 +45,6 @@
 	},
 	"dependencies": {
 		"@nsnanocat/util": "^1.8.10",
-		"@protobuf-ts/runtime": "^2.11.1",
-		"coordtransform": "^2.1.2"
+		"@protobuf-ts/runtime": "^2.11.1"
 	}
 }

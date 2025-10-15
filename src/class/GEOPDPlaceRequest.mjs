@@ -27,8 +27,12 @@ export default class GEOPDPlaceRequest {
 				return requestedComponent;
 			});
 		if (body?.requestType) body.requestType = PlaceRequestType[body.requestType];
-		if (body?.placeRequestParameters?.reverseGeocodingParameters?.extendedLocation?.type) body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.type = Location_LocationType[body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.type];
-		if (body?.placeRequestParameters?.batchReverseGeocodingParameters?.additionalPlaceType) body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType = PlaceType[body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType];
+		if (body?.placeRequestParameters?.reverseGeocodingParameters?.extendedLocation)
+			body.placeRequestParameters.reverseGeocodingParameters.extendedLocation = body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.map(location => {
+				if (location.type) location.type = Location_LocationType[location.type];
+				return location;
+			});
+		if (body?.placeRequestParameters?.batchReverseGeocodingParameters?.additionalPlaceType) body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType = body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType.map(placeType => PlaceType[placeType]);
 		Console.log("✅ GEOPDPlaceRequest.decode");
 		return body;
 	}
@@ -56,8 +60,12 @@ export default class GEOPDPlaceRequest {
 				return requestedComponent;
 			});
 		if (body.requestType) body.requestType = PlaceRequestType[body.requestType];
-		if (body?.placeRequestParameters?.reverseGeocodingParameters?.extendedLocation?.type) body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.type = Location_LocationType[body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.type];
-		if (body?.placeRequestParameters?.batchReverseGeocodingParameters?.additionalPlaceType) body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType = PlaceType[body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType];
+		if (body?.placeRequestParameters?.reverseGeocodingParameters?.extendedLocation)
+			body.placeRequestParameters.reverseGeocodingParameters.extendedLocation = body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.map(location => {
+				if (location.type) location.type = Location_LocationType[location.type];
+				return location;
+			});
+		if (body?.placeRequestParameters?.batchReverseGeocodingParameters?.additionalPlaceType) body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType = body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType.map(placeType => PlaceType[placeType]);
 		const rawBody = PlaceRequest.toBinary(body);
 		Console.log("✅ GEOPDPlaceRequest.encode");
 		return rawBody;

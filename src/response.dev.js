@@ -128,8 +128,11 @@ Console.info(`FORMAT: ${FORMAT}`);
 										case "Loon":
 											AppleDispatcher = await LocationService.Dispatcher($request, Caches);
 											break;
-										default:
+										case "Surge":
+										case "Egern":
 											AppleDispatcher = Caches.Dispatcher.get($request.id);
+											break;
+										default:
 											break;
 									}
 									AppleDispatcher = GEOPDPlaceResponse.decode(AppleDispatcher);

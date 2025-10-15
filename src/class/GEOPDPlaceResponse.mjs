@@ -6,7 +6,7 @@ export default class GEOPDPlaceResponse {
 	static decode(rawBody = new Uint8Array([])) {
 		Console.log("☑️ GEOPDPlaceResponse.decode");
 		switch (true) {
-			case typeof rawBody === "string": // base64 string
+			case rawBody === "string": // base64 string
 				rawBody = new Uint8Array(Buffer.from(rawBody, "base64"));
 				break;
 			case Buffer.isBuffer(rawBody): // Node.js Buffer
@@ -25,60 +25,60 @@ export default class GEOPDPlaceResponse {
 				throw new TypeError("Unsupported rawBody type");
 		}
 		const body = PlaceResponse.fromBinary(rawBody);
-		if (typeof body?.status !== "undefined") body.status = StatusCode[body.status];
-		if (typeof body?.requestType !== "undefined") body.requestType = PlaceRequestType[body.requestType];
-		if (typeof body?.globalResult?.ipGeoLookupResult?.status !== "undefined") body.globalResult.ipGeoLookupResult.status = StatusCode[body.globalResult.ipGeoLookupResult.status];
-		if (typeof body?.globalResult?.mapsHomeResult?.mapsHomeSection !== "undefined")
+		if (body?.status) body.status = StatusCode[body.status];
+		if (body?.requestType) body.requestType = PlaceRequestType[body.requestType];
+		if (body?.globalResult?.ipGeoLookupResult?.status) body.globalResult.ipGeoLookupResult.status = StatusCode[body.globalResult.ipGeoLookupResult.status];
+		if (body?.globalResult?.mapsHomeResult?.mapsHomeSection)
 			body.globalResult.mapsHomeResult.mapsHomeSection = body.globalResult.mapsHomeResult.mapsHomeSection.map(mapsHomeSection => {
-				if (typeof mapsHomeSection.sectionType !== "undefined") mapsHomeSection.sectionType = MapsHomeResult_MapsHomeSectionType[mapsHomeSection.sectionType];
+				if (mapsHomeSection.sectionType) mapsHomeSection.sectionType = MapsHomeResult_MapsHomeSectionType[mapsHomeSection.sectionType];
 				return mapsHomeSection;
 			});
-		if (typeof body?.globalResult?.guidesHomeResult?.featuredGuides?.sectionType !== "undefined") body.globalResult.guidesHomeResult.featuredGuides.sectionType = GuidesHomeFixedSectionType[body.globalResult.guidesHomeResult.featuredGuides.sectionType];
-		if (typeof body?.globalResult?.guidesHomeResult?.filters?.sectionType !== "undefined") body.globalResult.guidesHomeResult.filters.sectionType = GuidesHomeFixedSectionType[body.globalResult.guidesHomeResult.filters.sectionType];
-		if (typeof body?.globalResult?.guidesHomeResult?.filteredGuides?.sectionType !== "undefined") body.globalResult.guidesHomeResult.filteredGuides.sectionType = GuidesHomeFixedSectionType[body.globalResult.guidesHomeResult.filteredGuides.sectionType];
-		if (typeof body?.globalResult?.guidesHomeResult?.repeatableSection !== "undefined")
+		if (body?.globalResult?.guidesHomeResult?.featuredGuides?.sectionType) body.globalResult.guidesHomeResult.featuredGuides.sectionType = GuidesHomeFixedSectionType[body.globalResult.guidesHomeResult.featuredGuides.sectionType];
+		if (body?.globalResult?.guidesHomeResult?.filters?.sectionType) body.globalResult.guidesHomeResult.filters.sectionType = GuidesHomeFixedSectionType[body.globalResult.guidesHomeResult.filters.sectionType];
+		if (body?.globalResult?.guidesHomeResult?.filteredGuides?.sectionType) body.globalResult.guidesHomeResult.filteredGuides.sectionType = GuidesHomeFixedSectionType[body.globalResult.guidesHomeResult.filteredGuides.sectionType];
+		if (body?.globalResult?.guidesHomeResult?.repeatableSection)
 			body.globalResult.guidesHomeResult.repeatableSection = body.globalResult.guidesHomeResult.repeatableSection.map(repeatableSection => {
-				if (typeof repeatableSection.sectionType !== "undefined") repeatableSection.sectionType = GuidesHomeRepeatableSectionType[repeatableSection.sectionType];
-				if (typeof repeatableSection.contentType !== "undefined") repeatableSection.contentType = GuidesHomeRepeatableSectionContentType[repeatableSection.contentType];
+				if (repeatableSection.sectionType) repeatableSection.sectionType = GuidesHomeRepeatableSectionType[repeatableSection.sectionType];
+				if (repeatableSection.contentType) repeatableSection.contentType = GuidesHomeRepeatableSectionContentType[repeatableSection.contentType];
 				return repeatableSection;
 			});
-		if (typeof body?.placeResult !== "undefined")
+		if (body?.placeResult)
 			body.placeResult = body.placeResult.map(placeResult => {
-				if (typeof placeResult?.status !== "undefined") placeResult.status = StatusCode[placeResult.status];
-				if (typeof placeResult?.component !== "undefined")
+				if (placeResult?.status) placeResult.status = StatusCode[placeResult.status];
+				if (placeResult?.component)
 					placeResult.component = placeResult.component.map(component => {
-						if (typeof component.type !== "undefined") component.type = ComponentType[component.type];
-						if (typeof component.status !== "undefined") component.status = StatusCode[component.status];
-						if (typeof component.cacheControl !== "undefined") component.cacheControl = Component_CacheControlType[component.cacheControl];
+						if (component.type) component.type = ComponentType[component.type];
+						if (component.status) component.status = StatusCode[component.status];
+						if (component.cacheControl) component.cacheControl = Component_CacheControlType[component.cacheControl];
 						return component;
 					});
 				return placeResult;
 			});
-		if (typeof body?.mapsResult !== "undefined")
+		if (body?.mapsResult)
 			body.mapsResult = body.mapsResult.map(mapsResult => {
-				if (typeof mapsResult.resultType !== "undefined") mapsResult.resultType = MapsResultType[mapsResult.resultType];
-				if (typeof mapsResult.place?.status !== "undefined") mapsResult.place.status = StatusCode[mapsResult.place.status];
-				if (typeof mapsResult.place?.component !== "undefined")
+				if (mapsResult.resultType) mapsResult.resultType = MapsResultType[mapsResult.resultType];
+				if (mapsResult.place?.status) mapsResult.place.status = StatusCode[mapsResult.place.status];
+				if (mapsResult.place?.component)
 					mapsResult.place.component = mapsResult.place.component.map(component => {
-						if (typeof component.type !== "undefined") component.type = ComponentType[component.type];
-						if (typeof component.status !== "undefined") component.status = StatusCode[component.status];
-						if (typeof component.cacheControl !== "undefined") component.cacheControl = Component_CacheControlType[component.cacheControl];
+						if (component.type) component.type = ComponentType[component.type];
+						if (component.status) component.status = StatusCode[component.status];
+						if (component.cacheControl) component.cacheControl = Component_CacheControlType[component.cacheControl];
 						return component;
 					});
-				if (typeof mapsResult.collection?.status !== "undefined") mapsResult.collection.status = StatusCode[mapsResult.collection.status];
-				if (typeof mapsResult.collection?.component !== "undefined")
+				if (mapsResult.collection?.status) mapsResult.collection.status = StatusCode[mapsResult.collection.status];
+				if (mapsResult.collection?.component)
 					mapsResult.collection.component = mapsResult.collection.component.map(component => {
-						if (typeof component.type !== "undefined") component.type = ComponentType[component.type];
-						if (typeof component.status !== "undefined") component.status = StatusCode[component.status];
-						if (typeof component.cacheControl !== "undefined") component.cacheControl = Component_CacheControlType[component.cacheControl];
+						if (component.type) component.type = ComponentType[component.type];
+						if (component.status) component.status = StatusCode[component.status];
+						if (component.cacheControl) component.cacheControl = Component_CacheControlType[component.cacheControl];
 						return component;
 					});
-				if (typeof mapsResult.publisher?.status !== "undefined") mapsResult.publisher.status = StatusCode[mapsResult.publisher.status];
-				if (typeof mapsResult.publisher?.component !== "undefined")
+				if (mapsResult.publisher?.status) mapsResult.publisher.status = StatusCode[mapsResult.publisher.status];
+				if (mapsResult.publisher?.component)
 					mapsResult.publisher.component = mapsResult.publisher.component.map(component => {
-						if (typeof component.type !== "undefined") component.type = ComponentType[component.type];
-						if (typeof component.status !== "undefined") component.status = StatusCode[component.status];
-						if (typeof component.cacheControl !== "undefined") component.cacheControl = Component_CacheControlType[component.cacheControl];
+						if (component.type) component.type = ComponentType[component.type];
+						if (component.status) component.status = StatusCode[component.status];
+						if (component.cacheControl) component.cacheControl = Component_CacheControlType[component.cacheControl];
 						return component;
 					});
 				return mapsResult;
@@ -89,60 +89,60 @@ export default class GEOPDPlaceResponse {
 
 	static encode(body = {}) {
 		Console.log("☑️ GEOPDPlaceResponse.encode");
-		if (typeof body?.status !== "undefined") body.status = StatusCode[body.status];
-		if (typeof body?.requestType !== "undefined") body.requestType = PlaceRequestType[body.requestType];
-		if (typeof body?.globalResult?.ipGeoLookupResult?.status !== "undefined") body.globalResult.ipGeoLookupResult.status = StatusCode[body.globalResult.ipGeoLookupResult.status];
-		if (typeof body?.globalResult?.mapsHomeResult?.mapsHomeSection !== "undefined")
+		if (body?.status) body.status = StatusCode[body.status];
+		if (body?.requestType) body.requestType = PlaceRequestType[body.requestType];
+		if (body?.globalResult?.ipGeoLookupResult?.status) body.globalResult.ipGeoLookupResult.status = StatusCode[body.globalResult.ipGeoLookupResult.status];
+		if (body?.globalResult?.mapsHomeResult?.mapsHomeSection)
 			body.globalResult.mapsHomeResult.mapsHomeSection = body.globalResult.mapsHomeResult.mapsHomeSection.map(mapsHomeSection => {
-				if (typeof mapsHomeSection.sectionType !== "undefined") mapsHomeSection.sectionType = MapsHomeResult_MapsHomeSectionType[mapsHomeSection.sectionType];
+				if (mapsHomeSection.sectionType) mapsHomeSection.sectionType = MapsHomeResult_MapsHomeSectionType[mapsHomeSection.sectionType];
 				return mapsHomeSection;
 			});
-		if (typeof body?.globalResult?.guidesHomeResult?.featuredGuides?.sectionType !== "undefined") body.globalResult.guidesHomeResult.featuredGuides.sectionType = GuidesHomeFixedSectionType[body.globalResult.guidesHomeResult.featuredGuides.sectionType];
-		if (typeof body?.globalResult?.guidesHomeResult?.filters?.sectionType !== "undefined") body.globalResult.guidesHomeResult.filters.sectionType = GuidesHomeFixedSectionType[body.globalResult.guidesHomeResult.filters.sectionType];
-		if (typeof body?.globalResult?.guidesHomeResult?.filteredGuides?.sectionType !== "undefined") body.globalResult.guidesHomeResult.filteredGuides.sectionType = GuidesHomeFixedSectionType[body.globalResult.guidesHomeResult.filteredGuides.sectionType];
-		if (typeof body?.globalResult?.guidesHomeResult?.repeatableSection !== "undefined")
+		if (body?.globalResult?.guidesHomeResult?.featuredGuides?.sectionType) body.globalResult.guidesHomeResult.featuredGuides.sectionType = GuidesHomeFixedSectionType[body.globalResult.guidesHomeResult.featuredGuides.sectionType];
+		if (body?.globalResult?.guidesHomeResult?.filters?.sectionType) body.globalResult.guidesHomeResult.filters.sectionType = GuidesHomeFixedSectionType[body.globalResult.guidesHomeResult.filters.sectionType];
+		if (body?.globalResult?.guidesHomeResult?.filteredGuides?.sectionType) body.globalResult.guidesHomeResult.filteredGuides.sectionType = GuidesHomeFixedSectionType[body.globalResult.guidesHomeResult.filteredGuides.sectionType];
+		if (body?.globalResult?.guidesHomeResult?.repeatableSection)
 			body.globalResult.guidesHomeResult.repeatableSection = body.globalResult.guidesHomeResult.repeatableSection.map(repeatableSection => {
-				if (typeof repeatableSection.sectionType !== "undefined") repeatableSection.sectionType = GuidesHomeRepeatableSectionType[repeatableSection.sectionType];
-				if (typeof repeatableSection.contentType !== "undefined") repeatableSection.contentType = GuidesHomeRepeatableSectionContentType[repeatableSection.contentType];
+				if (repeatableSection.sectionType) repeatableSection.sectionType = GuidesHomeRepeatableSectionType[repeatableSection.sectionType];
+				if (repeatableSection.contentType) repeatableSection.contentType = GuidesHomeRepeatableSectionContentType[repeatableSection.contentType];
 				return repeatableSection;
 			});
-		if (typeof body?.placeResult !== "undefined")
+		if (body?.placeResult)
 			body.placeResult = body.placeResult.map(placeResult => {
-				if (typeof placeResult?.status !== "undefined") placeResult.status = StatusCode[placeResult.status];
-				if (typeof placeResult?.component !== "undefined")
+				if (placeResult?.status) placeResult.status = StatusCode[placeResult.status];
+				if (placeResult?.component)
 					placeResult.component = placeResult.component.map(component => {
-						if (typeof component.type !== "undefined") component.type = ComponentType[component.type];
-						if (typeof component.status !== "undefined") component.status = StatusCode[component.status];
-						if (typeof component.cacheControl !== "undefined") component.cacheControl = Component_CacheControlType[component.cacheControl];
+						if (component.type) component.type = ComponentType[component.type];
+						if (component.status) component.status = StatusCode[component.status];
+						if (component.cacheControl) component.cacheControl = Component_CacheControlType[component.cacheControl];
 						return component;
 					});
 				return placeResult;
 			});
-		if (typeof body?.mapsResult !== "undefined")
+		if (body?.mapsResult)
 			body.mapsResult = body.mapsResult.map(mapsResult => {
-				if (typeof mapsResult.resultType !== "undefined") mapsResult.resultType = MapsResultType[mapsResult.resultType];
-				if (typeof mapsResult.place?.status !== "undefined") mapsResult.place.status = StatusCode[mapsResult.place.status];
-				if (typeof mapsResult.place?.component !== "undefined")
+				if (mapsResult.resultType) mapsResult.resultType = MapsResultType[mapsResult.resultType];
+				if (mapsResult.place?.status) mapsResult.place.status = StatusCode[mapsResult.place.status];
+				if (mapsResult.place?.component)
 					mapsResult.place.component = mapsResult.place.component.map(component => {
-						if (typeof component.type !== "undefined") component.type = ComponentType[component.type];
-						if (typeof component.status !== "undefined") component.status = StatusCode[component.status];
-						if (typeof component.cacheControl !== "undefined") component.cacheControl = Component_CacheControlType[component.cacheControl];
+						if (component.type) component.type = ComponentType[component.type];
+						if (component.status) component.status = StatusCode[component.status];
+						if (component.cacheControl) component.cacheControl = Component_CacheControlType[component.cacheControl];
 						return component;
 					});
-				if (typeof mapsResult.collection?.status !== "undefined") mapsResult.collection.status = StatusCode[mapsResult.collection.status];
-				if (typeof mapsResult.collection?.component !== "undefined")
+				if (mapsResult.collection?.status) mapsResult.collection.status = StatusCode[mapsResult.collection.status];
+				if (mapsResult.collection?.component)
 					mapsResult.collection.component = mapsResult.collection.component.map(component => {
-						if (typeof component.type !== "undefined") component.type = ComponentType[component.type];
-						if (typeof component.status !== "undefined") component.status = StatusCode[component.status];
-						if (typeof component.cacheControl !== "undefined") component.cacheControl = Component_CacheControlType[component.cacheControl];
+						if (component.type) component.type = ComponentType[component.type];
+						if (component.status) component.status = StatusCode[component.status];
+						if (component.cacheControl) component.cacheControl = Component_CacheControlType[component.cacheControl];
 						return component;
 					});
-				if (typeof mapsResult.publisher?.status !== "undefined") mapsResult.publisher.status = StatusCode[mapsResult.publisher.status];
-				if (typeof mapsResult.publisher?.component !== "undefined")
+				if (mapsResult.publisher?.status) mapsResult.publisher.status = StatusCode[mapsResult.publisher.status];
+				if (mapsResult.publisher?.component)
 					mapsResult.publisher.component = mapsResult.publisher.component.map(component => {
-						if (typeof component.type !== "undefined") component.type = ComponentType[component.type];
-						if (typeof component.status !== "undefined") component.status = StatusCode[component.status];
-						if (typeof component.cacheControl !== "undefined") component.cacheControl = Component_CacheControlType[component.cacheControl];
+						if (component.type) component.type = ComponentType[component.type];
+						if (component.status) component.status = StatusCode[component.status];
+						if (component.cacheControl) component.cacheControl = Component_CacheControlType[component.cacheControl];
 						return component;
 					});
 				return mapsResult;
@@ -185,7 +185,7 @@ export default class GEOPDPlaceResponse {
 								switch (component.type) {
 									case "ISO_3166_CODE": // 个性化修改的
 										component.value = component.value.map(value => {
-											if (typeof value.iso3166Code !== "undefined") value.iso3166Code.countryCode = "US";
+											if (value.iso3166Code) value.iso3166Code.countryCode = "US";
 											return value;
 										});
 										break;

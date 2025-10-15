@@ -126,7 +126,9 @@ Console.info(`FORMAT: ${FORMAT}`);
 									let AppleDispatcher = new Uint8Array();
 									switch ($app) {
 										case "Loon":
-											AppleDispatcher = await LocationService.Dispatcher($request, Caches);
+										case "Quantumult X":
+										case "Stash":
+											AppleDispatcher = await LocationService.Dispatcher($request);
 											break;
 										case "Surge":
 										case "Egern":

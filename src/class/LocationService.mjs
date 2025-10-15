@@ -12,9 +12,9 @@ export default class LocationService {
 		this.country = parameters.country;
 	}
 
-	static async Dispatcher(request = $request, cache = {}) {
+	static async Dispatcher(request = $request) {
 		Console.info("☑️ Dispatcher");
-		Console.debug(`request: ${JSON.stringify(request, null, 2)}`);
+		//Console.debug(`request: ${JSON.stringify(request, null, 2)}`);
 		const newRequest = { ...request };
 		newRequest.url = "https://gsp-ssl.ls.apple.com/dispatcher.arpc";
 		newRequest["binary-mode"] = true;
@@ -31,15 +31,6 @@ export default class LocationService {
 				// return GEOPDPlaceResponse.decode(arpc.message);
 				return arpc.message;
 			});
-			switch ($app) {
-				case "Loon":
-					break;
-				default:
-					cache.Dispatcher.set(request.id, Buffer.from(dispatcher).toString("base64"));
-					cache.Dispatcher = Array.from(cache.Dispatcher).slice(-10);
-					Storage.setItem("@iRingo.Location.Caches", cache);
-					break;
-			}
 		} catch (error) {
 			Console.error(`Dispatcher: ${error}`);
 		} finally {
@@ -47,5 +38,26 @@ export default class LocationService {
 			Console.info("✅ Dispatcher");
 		}
 		return dispatcher;
+	}
+
+	static setDispatcherCache(request = $request, dispatcher, cache = {}) {
+		Console.info("☑️ setDispatcherCache");
+		//Console.debug(`request: ${JSON.stringify(request, null, 2)}`);
+		//Console.debug(`response: ${JSON.stringify(response, null, 2)}`);
+		switch ($app) {
+			case "Loon":
+			case "Quantumult X":
+			case "Stash":
+				break;
+			case "Surge":
+			case "Egern":
+				cache.Dispatcher.set(request.id, Buffer.from(dispatcher).toString("base64"));
+				break;
+			default:
+				break;
+		}
+		cache.Dispatcher = Array.from(cache.Dispatcher).slice(-10);
+		Console.info("✅ setDispatcherCache");
+		return Storage.setItem("@iRingo.Location.Caches", cache);
 	}
 }

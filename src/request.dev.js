@@ -86,10 +86,13 @@ Console.info(`FORMAT: ${FORMAT}`);
 								case "/dispatcher": {
 									switch ($app) {
 										case "Loon":
+										case "Quantumult X":
+										case "Stash":
 											break;
 										case "Surge":
 										case "Egern": {
-											const AppleDispatcher = await LocationService.Dispatcher($request, Caches);
+											const AppleDispatcher = await LocationService.Dispatcher($request);
+											LocationService.setDispatcherCache($request, AppleDispatcher, Caches);
 											break;
 										}
 										default:

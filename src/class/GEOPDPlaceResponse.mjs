@@ -6,7 +6,7 @@ export default class GEOPDPlaceResponse {
 	static decode(rawBody = new Uint8Array([])) {
 		Console.log("☑️ GEOPDPlaceResponse.decode");
 		switch (true) {
-			case rawBody === "string": // base64 string
+			case typeof rawBody === "string": // base64 string
 				rawBody = new Uint8Array(Buffer.from(rawBody, "base64"));
 				break;
 			case Buffer.isBuffer(rawBody): // Node.js Buffer

@@ -87,9 +87,10 @@ Console.info(`FORMAT: ${FORMAT}`);
 									switch ($app) {
 										case "Loon":
 											break;
-										default:
+										default: {
 											const AppleDispatcher = await LocationService.Dispatcher($request, Caches);
 											break;
+										}
 									}
 									/******************  initialization start  *******************/
 									// 先拆分aRPC校验头和protobuf数据体

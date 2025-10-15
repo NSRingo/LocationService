@@ -136,12 +136,10 @@ Console.info(`FORMAT: ${FORMAT}`);
 											}
 											break;
 										case "REQUEST_TYPE_MAPS_HOME":
-											//body.displayRegion = "US";
-											//body.clientMetadata.deviceCountryCode = "US";
 											break;
 									}
-									//body.displayRegion = "US";
-									//body.clientMetadata.deviceCountryCode = "US";
+									//body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+									body.clientMetadata.deviceCountryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
 									/******************  initialization start  *******************/
 									Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
 									arpc.message = GEOPDPlaceRequest.encode(body);

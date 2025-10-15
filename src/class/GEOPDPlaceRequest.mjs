@@ -5,6 +5,25 @@ import { ResolvedItemType, ClientMetadata_ClientRevision, ComponentType, PlaceRe
 export default class GEOPDPlaceRequest {
 	static decode(rawBody = new Uint8Array([])) {
 		Console.log("☑️ GEOPDPlaceRequest.decode");
+		switch (true) {
+			case rawBody === "string": // base64 string
+				rawBody = new Uint8Array(Buffer.from(rawBody, "base64"));
+				break;
+			case Buffer.isBuffer(rawBody): // Node.js Buffer
+				rawBody = new Uint8Array(rawBody.buffer, rawBody.byteOffset, rawBody.byteLength);
+				break;
+			case rawBody instanceof Uint8Array: // Uint8Array
+				// 保持原样
+				break;
+			case ArrayBuffer.isView(rawBody): // 其它 TypedArray/DataView
+				rawBody = new Uint8Array(rawBody.buffer, rawBody.byteOffset, rawBody.byteLength);
+				break;
+			case rawBody instanceof ArrayBuffer: // 原始 ArrayBuffer
+				rawBody = new Uint8Array(rawBody);
+				break;
+			default:
+				throw new TypeError("Unsupported rawBody type");
+		}
 		const body = PlaceRequest.fromBinary(rawBody);
 		if (body?.analyticMetadata?.serviceTag)
 			body.analyticMetadata.serviceTag.map(serviceTag => {

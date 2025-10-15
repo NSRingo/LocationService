@@ -25,66 +25,66 @@ export default class GEOPDPlaceRequest {
 				throw new TypeError("Unsupported rawBody type");
 		}
 		const body = PlaceRequest.fromBinary(rawBody);
-		if (body?.analyticMetadata?.serviceTag)
+		if (typeof body?.analyticMetadata?.serviceTag !== "undefined")
 			body.analyticMetadata.serviceTag.map(serviceTag => {
-				if (serviceTag.serviceType) serviceTag.serviceType = GeoServiceType[serviceTag.serviceType];
+				if (typeof serviceTag.serviceType !== "undefined") serviceTag.serviceType = GeoServiceType[serviceTag.serviceType];
 				return serviceTag;
 			});
-		if (body?.clientMetadata?.knownClientResolvedType) body.clientMetadata.knownClientResolvedType = body.clientMetadata.knownClientResolvedType.map(knownClientResolvedType => ResolvedItemType[knownClientResolvedType]);
-		if (body?.clientMetadata?.deviceExtendedLocation?.type) body.clientMetadata.deviceExtendedLocation.type = Location_LocationType[body.clientMetadata.deviceExtendedLocation.type];
-		if (body?.clientMetadata?.deviceHistoricalLocation)
+		if (typeof body?.clientMetadata?.knownClientResolvedType !== "undefined") body.clientMetadata.knownClientResolvedType = body.clientMetadata.knownClientResolvedType.map(knownClientResolvedType => ResolvedItemType[knownClientResolvedType]);
+		if (typeof body?.clientMetadata?.deviceExtendedLocation?.type !== "undefined") body.clientMetadata.deviceExtendedLocation.type = Location_LocationType[body.clientMetadata.deviceExtendedLocation.type];
+		if (typeof body?.clientMetadata?.deviceHistoricalLocation !== "undefined")
 			body.clientMetadata.deviceHistoricalLocation = body.clientMetadata.deviceHistoricalLocation.map(location => {
-				if (location.type) location.type = Location_LocationType[location.type];
+				if (typeof location.type !== "undefined") location.type = Location_LocationType[location.type];
 				return location;
 			});
-		if (body?.clientMetadata?.supportedMapsResultType) body.clientMetadata.supportedMapsResultType = body.clientMetadata.supportedMapsResultType.map(supportedMapsResultType => MapsResultType[supportedMapsResultType]);
-		if (body?.clientMetadata?.clientRevisions) body.clientMetadata.clientRevisions = body.clientMetadata.clientRevisions.map(clientRevision => ClientMetadata_ClientRevision[clientRevision]);
-		if (body?.clientMetadata?.localizationCapabilities?.supportedPhoneticType) body.clientMetadata.localizationCapabilities.supportedPhoneticType = body.clientMetadata.localizationCapabilities.supportedPhoneticType.map(supportedPhoneticType => NameInfo_PhoneticType[supportedPhoneticType]);
-		if (body?.requestedComponent)
+		if (typeof body?.clientMetadata?.supportedMapsResultType !== "undefined") body.clientMetadata.supportedMapsResultType = body.clientMetadata.supportedMapsResultType.map(supportedMapsResultType => MapsResultType[supportedMapsResultType]);
+		if (typeof body?.clientMetadata?.clientRevisions !== "undefined") body.clientMetadata.clientRevisions = body.clientMetadata.clientRevisions.map(clientRevision => ClientMetadata_ClientRevision[clientRevision]);
+		if (typeof body?.clientMetadata?.localizationCapabilities?.supportedPhoneticType !== "undefined") body.clientMetadata.localizationCapabilities.supportedPhoneticType = body.clientMetadata.localizationCapabilities.supportedPhoneticType.map(supportedPhoneticType => NameInfo_PhoneticType[supportedPhoneticType]);
+		if (typeof body?.requestedComponent !== "undefined")
 			body.requestedComponent.map(requestedComponent => {
-				if (requestedComponent.type) requestedComponent.type = ComponentType[requestedComponent.type];
+				if (typeof requestedComponent.type !== "undefined") requestedComponent.type = ComponentType[requestedComponent.type];
 				return requestedComponent;
 			});
-		if (body?.requestType) body.requestType = PlaceRequestType[body.requestType];
-		if (body?.placeRequestParameters?.reverseGeocodingParameters?.extendedLocation)
+		if (typeof body?.requestType !== "undefined") body.requestType = PlaceRequestType[body.requestType];
+		if (typeof body?.placeRequestParameters?.reverseGeocodingParameters?.extendedLocation !== "undefined")
 			body.placeRequestParameters.reverseGeocodingParameters.extendedLocation = body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.map(location => {
-				if (location.type) location.type = Location_LocationType[location.type];
+				if (typeof location.type !== "undefined") location.type = Location_LocationType[location.type];
 				return location;
 			});
-		if (body?.placeRequestParameters?.batchReverseGeocodingParameters?.additionalPlaceType) body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType = body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType.map(placeType => PlaceType[placeType]);
+		if (typeof body?.placeRequestParameters?.batchReverseGeocodingParameters?.additionalPlaceType !== "undefined") body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType = body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType.map(placeType => PlaceType[placeType]);
 		Console.log("✅ GEOPDPlaceRequest.decode");
 		return body;
 	}
 
 	static encode(body = {}) {
 		Console.log("☑️ GEOPDPlaceRequest.encode");
-		if (body?.analyticMetadata?.serviceTag)
+		if (typeof body?.analyticMetadata?.serviceTag !== "undefined")
 			body.analyticMetadata.serviceTag.map(serviceTag => {
-				if (serviceTag.serviceType) serviceTag.serviceType = GeoServiceType[serviceTag.serviceType];
+				if (typeof serviceTag.serviceType !== "undefined") serviceTag.serviceType = GeoServiceType[serviceTag.serviceType];
 				return serviceTag;
 			});
-		if (body?.clientMetadata?.knownClientResolvedType) body.clientMetadata.knownClientResolvedType = body.clientMetadata.knownClientResolvedType.map(knownClientResolvedType => ResolvedItemType[knownClientResolvedType]);
-		if (body?.clientMetadata?.supportedMapsResultType) body.clientMetadata.supportedMapsResultType = body.clientMetadata.supportedMapsResultType.map(supportedMapsResultType => MapsResultType[supportedMapsResultType]);
-		if (body?.clientMetadata?.deviceHistoricalLocation)
+		if (typeof body?.clientMetadata?.knownClientResolvedType !== "undefined") body.clientMetadata.knownClientResolvedType = body.clientMetadata.knownClientResolvedType.map(knownClientResolvedType => ResolvedItemType[knownClientResolvedType]);
+		if (typeof body?.clientMetadata?.supportedMapsResultType !== "undefined") body.clientMetadata.supportedMapsResultType = body.clientMetadata.supportedMapsResultType.map(supportedMapsResultType => MapsResultType[supportedMapsResultType]);
+		if (typeof body?.clientMetadata?.deviceHistoricalLocation !== "undefined")
 			body.clientMetadata.deviceHistoricalLocation = body.clientMetadata.deviceHistoricalLocation.map(location => {
-				if (location.type) location.type = Location_LocationType[location.type];
+				if (typeof location.type !== "undefined") location.type = Location_LocationType[location.type];
 				return location;
 			});
-		if (body?.clientMetadata?.deviceExtendedLocation?.type) body.clientMetadata.deviceExtendedLocation.type = Location_LocationType[body.clientMetadata.deviceExtendedLocation.type];
-		if (body?.clientMetadata?.clientRevisions) body.clientMetadata.clientRevisions = body.clientMetadata.clientRevisions.map(clientRevision => ClientMetadata_ClientRevision[clientRevision]);
-		if (body?.clientMetadata?.localizationCapabilities?.supportedPhoneticType) body.clientMetadata.localizationCapabilities.supportedPhoneticType = body.clientMetadata.localizationCapabilities.supportedPhoneticType.map(supportedPhoneticType => NameInfo_PhoneticType[supportedPhoneticType]);
-		if (body?.requestedComponent)
+		if (typeof body?.clientMetadata?.deviceExtendedLocation?.type !== "undefined") body.clientMetadata.deviceExtendedLocation.type = Location_LocationType[body.clientMetadata.deviceExtendedLocation.type];
+		if (typeof body?.clientMetadata?.clientRevisions !== "undefined") body.clientMetadata.clientRevisions = body.clientMetadata.clientRevisions.map(clientRevision => ClientMetadata_ClientRevision[clientRevision]);
+		if (typeof body?.clientMetadata?.localizationCapabilities?.supportedPhoneticType !== "undefined") body.clientMetadata.localizationCapabilities.supportedPhoneticType = body.clientMetadata.localizationCapabilities.supportedPhoneticType.map(supportedPhoneticType => NameInfo_PhoneticType[supportedPhoneticType]);
+		if (typeof body?.requestedComponent !== "undefined")
 			body.requestedComponent.map(requestedComponent => {
-				if (requestedComponent.type) requestedComponent.type = ComponentType[requestedComponent.type];
+				if (typeof requestedComponent.type !== "undefined") requestedComponent.type = ComponentType[requestedComponent.type];
 				return requestedComponent;
 			});
-		if (body.requestType) body.requestType = PlaceRequestType[body.requestType];
-		if (body?.placeRequestParameters?.reverseGeocodingParameters?.extendedLocation)
+		if (typeof body.requestType !== "undefined") body.requestType = PlaceRequestType[body.requestType];
+		if (typeof body?.placeRequestParameters?.reverseGeocodingParameters?.extendedLocation !== "undefined")
 			body.placeRequestParameters.reverseGeocodingParameters.extendedLocation = body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.map(location => {
-				if (location.type) location.type = Location_LocationType[location.type];
+				if (typeof location.type !== "undefined") location.type = Location_LocationType[location.type];
 				return location;
 			});
-		if (body?.placeRequestParameters?.batchReverseGeocodingParameters?.additionalPlaceType) body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType = body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType.map(placeType => PlaceType[placeType]);
+		if (typeof body?.placeRequestParameters?.batchReverseGeocodingParameters?.additionalPlaceType !== "undefined") body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType = body.placeRequestParameters.batchReverseGeocodingParameters.additionalPlaceType.map(placeType => PlaceType[placeType]);
 		const rawBody = PlaceRequest.toBinary(body);
 		Console.log("✅ GEOPDPlaceRequest.encode");
 		return rawBody;

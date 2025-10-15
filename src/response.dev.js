@@ -4,6 +4,7 @@ import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
 import aRPC from "./aRPC/aRPC.mjs";
 import GEOPDPlaceResponse from "./class/GEOPDPlaceResponse.mjs";
+import LocationService from "./class/LocationService.mjs";
 import { BinaryReader, UnknownFieldHandler } from "@protobuf-ts/runtime";
 /***************** Processing *****************/
 // 解构URL
@@ -122,7 +123,15 @@ Console.info(`FORMAT: ${FORMAT}`);
 									body = GEOPDPlaceResponse.decode(arpc.message);
 									//Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
 									/******************  initialization finish  *******************/
-									let AppleDispatcher = Caches.Dispatcher.get($request.id);
+									let AppleDispatcher = new Uint8Array();
+									switch ($app) {
+										case "Loon":
+											AppleDispatcher = await LocationService.Dispatcher($request, Caches);
+											break;
+										default:
+											AppleDispatcher = Caches.Dispatcher.get($request.id);
+											break;
+									}
 									AppleDispatcher = GEOPDPlaceResponse.decode(AppleDispatcher);
 									//Console.debug(`AppleDispatcher: ${JSON.stringify(AppleDispatcher, null, 2)}`);
 									body = GEOPDPlaceResponse.composite(body, AppleDispatcher, Settings);

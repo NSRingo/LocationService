@@ -84,7 +84,13 @@ Console.info(`FORMAT: ${FORMAT}`);
 						case "dispatcher.is.autonavi.com":
 							switch (url.pathname) {
 								case "/dispatcher": {
-									const AppleDispatcher = await LocationService.Dispatcher($request, Caches);
+									switch ($app) {
+										case "Loon":
+											break;
+										default:
+											const AppleDispatcher = await LocationService.Dispatcher($request, Caches);
+											break;
+									}
 									/******************  initialization start  *******************/
 									// 先拆分aRPC校验头和protobuf数据体
 									const arpc = aRPC.request.unpack(rawBody);

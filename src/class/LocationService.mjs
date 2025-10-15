@@ -30,9 +30,15 @@ export default class LocationService {
 				// return GEOPDPlaceResponse.decode(arpc.message);
 				return arpc.message;
 			});
-			cache.Dispatcher.set(request.id, Buffer.from(dispatcher).toString("base64"));
-			cache.Dispatcher = Array.from(cache.Dispatcher).slice(-10);
-			Storage.setItem("@iRingo.Location.Caches", cache);
+			switch ($app) {
+				case "Loon":
+					break;
+				default:
+					cache.Dispatcher.set(request.id, Buffer.from(dispatcher).toString("base64"));
+					cache.Dispatcher = Array.from(cache.Dispatcher).slice(-10);
+					Storage.setItem("@iRingo.Location.Caches", cache);
+					break;
+			}
 		} catch (error) {
 			Console.error(`Dispatcher: ${error}`);
 		} finally {

@@ -14,6 +14,7 @@ export default class LocationService {
 
 	static async Dispatcher(request = $request, cache = {}) {
 		Console.info("☑️ Dispatcher");
+		Console.debug(`request: ${JSON.stringify(request, null, 2)}`);
 		const newRequest = { ...request };
 		newRequest.url = "https://gsp-ssl.ls.apple.com/dispatcher.arpc";
 		newRequest["binary-mode"] = true;
@@ -24,9 +25,9 @@ export default class LocationService {
 				/******************  initialization start  *******************/
 				// 先拆分aRPC校验头和protobuf数据体
 				const arpc = aRPC.response.unpack(rawBody);
-				Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
+				// Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
 				/******************  initialization finish  *******************/
-				Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
+				// Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
 				// return GEOPDPlaceResponse.decode(arpc.message);
 				return arpc.message;
 			});

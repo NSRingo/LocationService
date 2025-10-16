@@ -107,7 +107,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 									/******************  initialization finish  *******************/
 									body = GEOPDPlaceRequest.decode(arpc.message);
 									switch (body.requestType) {
-										case "REQUEST_TYPE_REVERSE_GEOCODING":
+										case "REVERSE_GEOCODING":
 											//body.placeRequestParameters.reverseGeocodingParameters.preserveOriginalLocation = false;
 											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "PLACE_QUESTIONNAIRE")) {
 												body.requestedComponent.push({ type: "PLACE_QUESTIONNAIRE", count: 1 }); // 73 - PLACE_QUESTIONNAIRE
@@ -155,7 +155,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 													break;
 											}
 											break;
-										case "REQUEST_TYPE_MAPS_HOME":
+										case "MAPS_HOME":
 											break;
 									}
 									//body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");

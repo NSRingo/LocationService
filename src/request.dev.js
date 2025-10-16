@@ -118,19 +118,20 @@ Console.info(`FORMAT: ${FORMAT}`);
 											}
 											*/
 											switch (body.analyticMetadata.appIdentifier) {
-												case "symptomsd-helper": //?
-												case "com.apple.news":
-												case "com.apple.networkserviceproxy":
-												case "com.apple.CoreRoutine.helperservice": //?
+												case "symptomsd-helper": // ?
+												case "com.apple.news": // 新闻
+												case "com.apple.networkserviceproxy": // ?
+												case "com.apple.CoreRoutine.helperservice": // ?
 													body.placeRequestParameters.reverseGeocodingParameters.extendedLocation = body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.map(location => {
 														location.latLng.lat = 40.748441;
 														location.latLng.lng = -73.985664;
 														return location;
 													});
 													break;
-												case "com.apple.Maps":
-												case "com.apple.NanoMaps":
+												case "com.apple.Maps": // 地图
+												case "com.apple.NanoMaps": // 地图 (watchOS)
 												default:
+													/*
 													body.placeRequestParameters.reverseGeocodingParameters.extendedLocation = body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.map(location => {
 														if (location.timestamp) {
 															location.latLng.lat = 40.748441;
@@ -138,13 +139,19 @@ Console.info(`FORMAT: ${FORMAT}`);
 														}
 														return location;
 													});
+													*/
 													break;
-												case "com.apple.weather":
-												case "com.apple.weatherd":
-												case "com.apple.nanoweatherd":
-												case "com.apple.weather.widget":
-												case "com.apple.photoanalysisd":
-												case "com.apple.MapsSuggestions":
+												case "com.apple.Home": // 家庭
+												case "com.apple.findmy": // 查找
+												case "com.apple.peopled": // 人物 (macOS)
+												case "com.apple.MobileSMS": // 短信
+												case "com.apple.weather": // 天气
+												case "com.apple.weatherd": // 天气 (macOS)
+												case "com.apple.nanoweatherd": // 天气 (watchOS)
+												case "com.apple.weather.widget": // 天气（小组件）
+												case "com.apple.weather.WeatherIntents": // 天气 (Siri)
+												case "com.apple.photoanalysisd": // 照片分析 (macOS)
+												case "com.apple.MapsSuggestions": // 地图建议
 													break;
 											}
 											break;

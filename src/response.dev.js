@@ -114,7 +114,8 @@ Console.info(`FORMAT: ${FORMAT}`);
 						case "dispatcher.is.autonavi.com":
 							switch (url.pathname) {
 								case "/dispatcher": {
-									Console.info(`x-apple-maps-app-identifier: ${$request.headers["x-apple-maps-app-identifier"]}`);
+									Console.info(`X-Apple-Maps-App-Identifier: ${$request.headers["x-apple-maps-app-identifier"] ?? $request.headers["X-Apple-Maps-App-Identifier"]}`);
+									if (!Settings.Dispatcher.Hybrid) break;
 									/******************  initialization start  *******************/
 									// 先拆分aRPC校验头和protobuf数据体
 									const arpc = aRPC.response.unpack(rawBody);

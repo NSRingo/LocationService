@@ -86,19 +86,21 @@ Console.info(`FORMAT: ${FORMAT}`);
 							switch (url.pathname) {
 								// 路径判断
 								case "/dispatcher": {
-									switch ($app) {
-										case "Loon":
-										case "Quantumult X":
-										case "Stash":
-											break;
-										case "Surge":
-										case "Egern": {
-											const AppleDispatcher = await LocationService.Dispatcher($request);
-											LocationService.setDispatcherCache($request, AppleDispatcher, Caches);
-											break;
+									if (Settings.Dispatcher.Hybrid) {
+										switch ($app) {
+											case "Loon":
+											case "Quantumult X":
+											case "Stash":
+												break;
+											case "Surge":
+											case "Egern": {
+												const AppleDispatcher = await LocationService.Dispatcher($request);
+												LocationService.setDispatcherCache($request, AppleDispatcher, Caches);
+												break;
+											}
+											default:
+												break;
 										}
-										default:
-											break;
 									}
 									/******************  initialization start  *******************/
 									// 先拆分aRPC校验头和protobuf数据体
@@ -224,9 +226,9 @@ Console.info(`FORMAT: ${FORMAT}`);
 					switch (url.pathname) {
 						case "/dispatcher.arpc":
 						case "/dispatcher":
-							Console.info(`x-apple-maps-app-identifier: ${$request.headers["x-apple-maps-app-identifier"]}`);
+							Console.info(`X-Apple-Maps-App-Identifier: ${$request.headers["x-apple-maps-app-identifier"] ?? $request.headers["X-Apple-Maps-App-Identifier"]}`);
 							// 重定向
-							switch (Settings.Redirect.Dispatcher) {
+							switch (Settings.Dispatcher.Redirect) {
 								case "AUTO":
 									break;
 								case "HYBRID":

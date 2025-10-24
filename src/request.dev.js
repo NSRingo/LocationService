@@ -110,61 +110,21 @@ Console.info(`FORMAT: ${FORMAT}`);
 									//Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
 									/******************  initialization finish  *******************/
 									body = GEOPDPlaceRequest.decode(arpc.message);
-									switch (body.analyticMetadata.appIdentifier) {
-										case "com.apple.Maps": // 地图
-										case "com.apple.NanoMaps": // 地图 (watchOS)
+									switch (body.requestType) {
+										case "REVERSE_GEOCODING": // 逆地理编码
 											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "PLACE_QUESTIONNAIRE")) {
 												body.requestedComponent.push({ type: "PLACE_QUESTIONNAIRE", count: 1 }); // 73 - PLACE_QUESTIONNAIRE
 											}
-											/*
-											body.placeRequestParameters.reverseGeocodingParameters.extendedLocation = body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.map(location => {
-												if (location.timestamp) {
-													location.latLng.lat = 40.748441;
-													location.latLng.lng = -73.985664;
-												}
-												return location;
-											});
-											*/
 											break;
-										case "analyticsd": // 分析
-										case "symptomsd-helper": // ?
-										case "com.apple.news": // 新闻
-										case "com.apple.networkserviceproxy": // ?
-										case "com.apple.CoreRoutine.helperservice":
-										default: {
-											/*
-											const deviceExtendedLocation = body.clientMetadata?.deviceExtendedLocation;
-											if (deviceExtendedLocation) {
-												deviceExtendedLocation.latLng.lat = 40.74844360059685;
-												deviceExtendedLocation.latLng.lng = -73.98565673245767;
-												if (deviceExtendedLocation.type) deviceExtendedLocation.type = "GPS";
+										case "AUTOCOMPLETE": // 自动完成
+											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "ISO_3166_CODE")) {
+												body.requestedComponent.push({ type: "ISO_3166_CODE", count: 2147483647 }); // 77 - ISO_3166_CODE
 											}
-											switch (body.requestType) {
-												case "REVERSE_GEOCODING":
-													body.placeRequestParameters.reverseGeocodingParameters.extendedLocation = body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.map(location => {
-														location.latLng.lat = 40.74844360059685;
-														location.latLng.lng = -73.98565673245767;
-														if (location.type) location.type = "GPS";
-														return location;
-													});
-													break;
-												case "MAPS_HOME":
-													break;
-											}
-											*/
 											break;
-										}
-										case "com.apple.Home": // 家庭
-										case "com.apple.findmy": // 查找
-										case "com.apple.peopled": // 人物 (macOS)
-										case "com.apple.MobileSMS": // 短信
-										case "com.apple.weather": // 天气
-										case "com.apple.weatherd": // 天气 (macOS)
-										case "com.apple.nanoweatherd": // 天气 (watchOS)
-										case "com.apple.weather.widget": // 天气（小组件）
-										case "com.apple.weather.WeatherIntents": // 天气 (Siri)
-										case "com.apple.photoanalysisd": // 照片分析 (macOS)
-										case "com.apple.MapsSuggestions": // 地图建议
+										default:
+											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "ISO_3166_CODE")) {
+												body.requestedComponent.push({ type: "ISO_3166_CODE", count: 1 }); // 77 - ISO_3166_CODE
+											}
 											break;
 									}
 									//body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");

@@ -110,35 +110,23 @@ Console.info(`FORMAT: ${FORMAT}`);
 									//Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
 									/******************  initialization finish  *******************/
 									body = GEOPDPlaceRequest.decode(arpc.message);
-									switch (body.analyticMetadata.appIdentifier) {
-										case "com.apple.Maps": // 地图
-										case "com.apple.NanoMaps": // 地图 (watchOS)
+									switch (body.requestType) {
+										case "REVERSE_GEOCODING": // 逆地理编码
 											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "PLACE_QUESTIONNAIRE")) {
 												body.requestedComponent.push({ type: "PLACE_QUESTIONNAIRE", count: 1 }); // 73 - PLACE_QUESTIONNAIRE
 											}
 											break;
-										case "analyticsd": // 分析
-										case "symptomsd-helper": // ?
-										case "com.apple.news": // 新闻
-										case "com.apple.networkserviceproxy": // ?
-										case "com.apple.CoreRoutine.helperservice":
-										default: {
+										case "AUTOCOMPLETE": // 自动完成
+											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "ISO_3166_CODE")) {
+												body.requestedComponent.push({ type: "ISO_3166_CODE", count: 2147483647 }); // 77 - ISO_3166_CODE
+											}
 											break;
-										}
-										case "com.apple.Home": // 家庭
-										case "com.apple.findmy": // 查找
-										case "com.apple.peopled": // 人物 (macOS)
-										case "com.apple.MobileSMS": // 短信
-										case "com.apple.weather": // 天气
-										case "com.apple.weatherd": // 天气 (macOS)
-										case "com.apple.nanoweatherd": // 天气 (watchOS)
-										case "com.apple.weather.widget": // 天气（小组件）
-										case "com.apple.weather.WeatherIntents": // 天气 (Siri)
-										case "com.apple.photoanalysisd": // 照片分析 (macOS)
-										case "com.apple.MapsSuggestions": // 地图建议
+										default:
+											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "ISO_3166_CODE")) {
+												body.requestedComponent.push({ type: "ISO_3166_CODE", count: 1 }); // 77 - ISO_3166_CODE
+											}
 											break;
 									}
-									//body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
 									body.clientMetadata.deviceCountryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
 									/******************  initialization start  *******************/
 									Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);

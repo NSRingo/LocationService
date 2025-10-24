@@ -1,10 +1,15 @@
 export default {
-	Location: {
+	LocationService: {
 		Settings: {
 			GeoCountryCode: "US",
-			Redirect: {
-				Dispatcher: "AUTO",
-			}
+			Dispatcher: {
+				Hybrid: true,
+				Redirect: "AUTO",
+			},
+			Directions: {
+				Hybrid: true,
+				Redirect: "AUTO",
+			},
 		},
 		Configs: {},
 	},

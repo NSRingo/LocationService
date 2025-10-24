@@ -22,7 +22,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 	 * 设置
 	 * @type {{Settings: import('./types').Settings}}
 	 */
-	const { Settings, Caches, Configs } = setENV("iRingo", "Location", database);
+	const { Settings, Caches, Configs } = setENV("iRingo", "LocationService", database);
 	Console.logLevel = Settings.LogLevel;
 	// 创建空数据
 	let body = {};

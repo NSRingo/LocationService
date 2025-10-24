@@ -58,6 +58,6 @@ export default class LocationService {
 		}
 		cache.Dispatcher = Array.from(cache.Dispatcher).slice(-10);
 		Console.info("✅ setDispatcherCache");
-		return Storage.setItem("@iRingo.Location.Caches", cache);
+		return Storage.setItem("@iRingo.LocationService.Caches", cache);
 	}
 }

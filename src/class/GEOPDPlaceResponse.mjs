@@ -156,9 +156,12 @@ export default class GEOPDPlaceResponse {
 		Console.log("☑️ GEOPDPlaceResponse.composite");
 		switch (`${AutoNaviDispatcher.status}|${AppleDispatcher.status}`) {
 			case "STATUS_SUCCESS|FAILED_NO_RESULT":
+			case "STATUS_SUCCESS|INVALID_REQUEST":
 				break;
 			case "FAILED_NO_RESULT|STATUS_SUCCESS":
+			case "INVALID_REQUEST|STATUS_SUCCESS":
 			case "FAILED_NO_RESULT|FAILED_NO_RESULT":
+			case "INVALID_REQUEST|INVALID_REQUEST":
 				AutoNaviDispatcher = AppleDispatcher;
 				break;
 			case "STATUS_SUCCESS|STATUS_SUCCESS":

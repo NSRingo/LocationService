@@ -20,7 +20,7 @@ DOMAIN,dispatcher.is.autonavi.com,DIRECT
 # 📍 Country Code
 📍 LocationService.pep.gcc.response = type=http-response, pattern=^https?:\/\/gspe1-ssl\.ls\.apple\.com\/pep\/gcc, requires-body=1, script-path=https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/response.bundle.js, argument={{{scriptParams}}}
 # 📍 Dispatcher
-📍 LocationService.Dispatcher.request = type=http-request, pattern=^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher, requires-body=1, binary-body-mode=1, debug=1, script-path=https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/request.bundle.js argument={{{scriptParams}}}
+📍 LocationService.Dispatcher.request = type=http-request, pattern=^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher, requires-body=1, binary-body-mode=1, debug=1, script-path=https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}
 📍 LocationService.Dispatcher.response = type=http-response, pattern=^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher, requires-body=1, binary-body-mode=1, debug=1, script-path=https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/response.bundle.js, argument={{{scriptParams}}}
 
 [MITM]

@@ -1,2 +1,2 @@
-#  iRingo: LocationService
+#  iRingo: 📍 LocationService
 LocationService

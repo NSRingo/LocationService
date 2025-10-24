@@ -3,8 +3,8 @@
 	"organizationName": " iRingo",
 	"displayName": " iRingo: 📍 LocationService",
 	"description": "自定义定位服务内容\n添加国际版功能\n自定义服务版本",
-	"homepage": "https://NSRingo.github.io/guide/GeoServices/location",
-	"openUrl": "http://boxjs.com/#/app/iRingo.Location",
+	"homepage": "https://NSRingo.github.io/guide/GeoServices/location-service",
+	"openUrl": "http://boxjs.com/#/app/iRingo.LocationService",
 	"icon": "https://images.macrumors.com/article-new/2019/07/ios_location_services-250x250.jpg",
 	"keywords": [],
 	"contributors": [

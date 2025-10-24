@@ -22,9 +22,6 @@ DOMAIN,dispatcher.is.autonavi.com,DIRECT
 # 📍 Dispatcher
 📍 LocationService.Dispatcher.request = type=http-request, pattern=^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher, requires-body=1, binary-body-mode=1, debug=1, script-path=https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/request.bundle.js argument={{{scriptParams}}}
 📍 LocationService.Dispatcher.response = type=http-response, pattern=^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher, requires-body=1, binary-body-mode=1, debug=1, script-path=https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/response.bundle.js, argument={{{scriptParams}}}
-# 🗺️ Network Defaults
-🗺️ Maps.config.defaults.request = type=http-request, pattern=^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults, script-path=https://github.com/NSRingo/GeoServices/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}
-🗺️ Maps.config.defaults.response = type=http-response, pattern=^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults, requires-body=1, engine=webview, script-path=https://github.com/NSRingo/GeoServices/releases/download/v{{@package 'version'}}/response.bundle.js, argument={{{scriptParams}}}
 
 [MITM]
-hostname = %APPEND% gspe1-ssl.ls.apple.com, dispatcher.is.autonavi.com, configuration.ls.apple.com
+hostname = %APPEND% gspe1-ssl.ls.apple.com, dispatcher.is.autonavi.com

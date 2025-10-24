@@ -10,9 +10,9 @@
 
 #[filter_local]
 # 📍 Country Code
-host,gspe1-ssl.ls.apple.com,direct
+host, gspe1-ssl.ls.apple.com, direct
 # 📍 Amap Dispatcher
-host,dispatcher.is.autonavi.com,direct
+host, dispatcher.is.autonavi.com, direct
 
 #[rewrite_local]
 # 📍 Country Code
@@ -20,9 +20,6 @@ host,dispatcher.is.autonavi.com,direct
 # 📍 Dispatcher
 ^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher url script-request-body https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/request.bundle.js
 ^https?:\/\/dispatcher\.is\.autonavi\.com\/dispatcher url script-response-body https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/response.bundle.js
-# 🗺️ Network Defaults
-^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults url script-request-header https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/request.bundle.js
-^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults url script-response-body https://github.com/NSRingo/LocationService/releases/download/v{{@package 'version'}}/response.bundle.js
 
 #[mitm]
-hostname = gspe1-ssl.ls.apple.com, dispatcher.is.autonavi.com, configuration.ls.apple.com
+hostname = gspe1-ssl.ls.apple.com, dispatcher.is.autonavi.com

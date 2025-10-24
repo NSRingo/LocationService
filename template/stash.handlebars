@@ -24,7 +24,6 @@ http:
   mitm:
     - "gspe1-ssl.ls.apple.com"
     - "dispatcher.is.autonavi.com"
-    - "configuration.ls.apple.com"
   script:
     - match: ^https?:\/\/gspe1-ssl\.ls\.apple\.com\/pep\/gcc
       name: LocationService.response
@@ -42,15 +41,6 @@ http:
       type: response
       require-body: true
       binary-mode: true
-      argument:
-    - match: ^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults
-      name: LocationService.request
-      type: request
-      argument:
-    - match: ^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults
-      name: LocationService.response
-      type: response
-      require-body: true
       argument:
 
 script-providers:

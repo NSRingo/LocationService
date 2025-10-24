@@ -80,9 +80,11 @@ Console.info(`FORMAT: ${FORMAT}`);
 					//Console.debug(`$request: ${JSON.stringify($request, null, 2)}`);
 					let rawBody = $app === "Quantumult X" ? new Uint8Array($request.bodyBytes ?? []) : ($request.body ?? new Uint8Array());
 					//Console.debug(`isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody, null, 2)}`);
+					// 主机判断
 					switch (url.hostname) {
 						case "dispatcher.is.autonavi.com":
 							switch (url.pathname) {
+								// 路径判断
 								case "/dispatcher": {
 									switch ($app) {
 										case "Loon":
@@ -108,13 +110,11 @@ Console.info(`FORMAT: ${FORMAT}`);
 									body = GEOPDPlaceRequest.decode(arpc.message);
 									switch (body.analyticMetadata.appIdentifier) {
 										case "com.apple.Maps": // 地图
-										// biome-ignore lint/suspicious/noFallthroughSwitchClause: correctly
 										case "com.apple.NanoMaps": // 地图 (watchOS)
-											//default:
 											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "PLACE_QUESTIONNAIRE")) {
 												body.requestedComponent.push({ type: "PLACE_QUESTIONNAIRE", count: 1 }); // 73 - PLACE_QUESTIONNAIRE
 											}
-										/*
+											/*
 											body.placeRequestParameters.reverseGeocodingParameters.extendedLocation = body.placeRequestParameters.reverseGeocodingParameters.extendedLocation.map(location => {
 												if (location.timestamp) {
 													location.latLng.lat = 40.748441;
@@ -123,14 +123,14 @@ Console.info(`FORMAT: ${FORMAT}`);
 												return location;
 											});
 											*/
-										//break;
+											break;
 										case "analyticsd": // 分析
 										case "symptomsd-helper": // ?
 										case "com.apple.news": // 新闻
 										case "com.apple.networkserviceproxy": // ?
 										case "com.apple.CoreRoutine.helperservice":
 										default: {
-											// ?
+											/*
 											const deviceExtendedLocation = body.clientMetadata?.deviceExtendedLocation;
 											if (deviceExtendedLocation) {
 												deviceExtendedLocation.latLng.lat = 40.74844360059685;
@@ -149,6 +149,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 												case "MAPS_HOME":
 													break;
 											}
+											*/
 											break;
 										}
 										case "com.apple.Home": // 家庭
@@ -223,11 +224,15 @@ Console.info(`FORMAT: ${FORMAT}`);
 					switch (url.pathname) {
 						case "/dispatcher.arpc":
 						case "/dispatcher":
-							Console.debug(`x-apple-maps-app-identifier: ${$request.headers["x-apple-maps-app-identifier"]}`);
+							Console.info(`x-apple-maps-app-identifier: ${$request.headers["x-apple-maps-app-identifier"]}`);
 							// 重定向
 							switch (Settings.Redirect.Dispatcher) {
 								case "AUTO":
+									break;
+								case "HYBRID":
 								default:
+									url.hostname = "dispatcher.is.autonavi.com";
+									url.pathname = "/dispatcher";
 									break;
 								case "AutoNavi":
 									url.hostname = "dispatcher.is.autonavi.com";

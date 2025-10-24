@@ -1,9 +1,9 @@
 import { $app, Console, done, Lodash as _, Storage } from "@nsnanocat/util";
-import XML from "./XML/XML.mjs";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
-import GEOResourceManifest from "./class/GEOResourceManifest.mjs";
-import GEOResourceManifestDownload from "./class/GEOResourceManifestDownload.mjs";
+import aRPC from "./aRPC/aRPC.mjs";
+import GEOPDPlaceResponse from "./class/GEOPDPlaceResponse.mjs";
+import LocationService from "./class/LocationService.mjs";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
@@ -14,15 +14,12 @@ Console.info(`PATHs: ${PATHs}`);
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 Console.info(`FORMAT: ${FORMAT}`);
-const PLATFORM = ["Location", "Maps"];
-if (url.searchParams.get("os") === "watchos") PLATFORM.push("Watch");
-Console.info(`PLATFORM: ${PLATFORM}`);
-(async () => {
+!(async () => {
 	/**
 	 * 设置
 	 * @type {{Settings: import('./types').Settings}}
 	 */
-	const { Settings, Caches, Configs } = setENV("iRingo", PLATFORM, database);
+	const { Settings, Caches, Configs } = setENV("iRingo", "Location", database);
 	Console.logLevel = Settings.LogLevel;
 	// 创建空数据
 	let body = {};
@@ -54,11 +51,11 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 						case "/pep/gcc":
 							_.set(Caches, "pep.gcc", $response.body);
 							Storage.setItem("@iRingo.Location.Caches", Caches);
-							switch (Settings.PEP.GCC) {
+							switch (Settings.GeoCountryCode) {
 								case "AUTO":
 									break;
 								default:
-									$response.body = Settings.PEP.GCC;
+									$response.body = Settings.GeoCountryCode;
 									break;
 							}
 							break;
@@ -68,42 +65,12 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 					BigInt.prototype.toJSON = function () {
 						return this.toString();
 					};
-					body = XML.parse($response.body);
 					// 路径判断
 					switch (url.pathname) {
 						case "/config/defaults": {
-							const PLIST = body.plist;
-							if (PLIST) {
-								// CN
-								PLIST["com.apple.GEO"].CountryProviders.CN.ShouldEnableLagunaBeach = true; // XX
-								PLIST["com.apple.GEO"].CountryProviders.CN.DrivingMultiWaypointRoutesEnabled = true; // 驾驶导航途径点
-								//PLIST["com.apple.GEO"].CountryProviders.CN.EnableAlberta = false; // CN
-								PLIST["com.apple.GEO"].CountryProviders.CN.EnableClientDrapedVectorPolygons = true; // CN
-								PLIST["com.apple.GEO"].CountryProviders.CN.GEOAddressCorrectionEnabled = true; // CN
-								delete PLIST["com.apple.GEO"].CountryProviders.CN.GEOBatchSpatialEventLookupMaxParametersCount; // CN
-								delete PLIST["com.apple.GEO"].CountryProviders.CN.GEOBatchSpatialPlaceLookupMaxParametersCount; // CN
-								PLIST["com.apple.GEO"].CountryProviders.CN.LocalitiesAndLandmarksSupported = true; // CN
-								PLIST["com.apple.GEO"].CountryProviders.CN.NavigationShowHeadingKey = true;
-								PLIST["com.apple.GEO"].CountryProviders.CN.POIBusynessDifferentialPrivacy = true; // CN
-								PLIST["com.apple.GEO"].CountryProviders.CN.POIBusynessRealTime = true; // CN
-								PLIST["com.apple.GEO"].CountryProviders.CN.TransitPayEnabled = true; // CN
-								//PLIST["com.apple.GEO"].CountryProviders.CN.WiFiQualityNetworkDisabled = Settings?.Config?.Defaults?.WiFiQualityNetworkDisabled ?? true; // CN
-								//PLIST["com.apple.GEO"].CountryProviders.CN.WiFiQualityTileDisabled = Settings?.Config?.Defaults?.WiFiQualityTileDisabled ?? true; // CN
-								PLIST["com.apple.GEO"].CountryProviders.CN.SupportsOffline = true; // CN
-								PLIST["com.apple.GEO"].CountryProviders.CN.SupportsCarIntegration = true; // CN
-								// TW
-								PLIST["com.apple.GEO"].CountryProviders.CN.GEOShouldSpeakWrittenAddresses = true; // TW
-								PLIST["com.apple.GEO"].CountryProviders.CN.GEOShouldSpeakWrittenPlaceNames = true; // TW
-								// US
-								PLIST["com.apple.GEO"].CountryProviders.CN["6694982d2b14e95815e44e970235e230"] = true; // US
-								PLIST["com.apple.GEO"].CountryProviders.CN.PedestrianAREnabled = true; // 现实世界中的线路
-								PLIST["com.apple.GEO"].CountryProviders.CN.OpticalHeadingEnabled = true; // 举起以查看
-								PLIST["com.apple.GEO"].CountryProviders.CN.UseCLPedestrianMapMatchedLocations = true; // 导航准确性-增强
-							}
 							break;
 						}
 					}
-					$response.body = XML.stringify(body);
 					break;
 			}
 			break;
@@ -129,49 +96,58 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 				case "application/vnd.google.protobuf":
 				case "application/octet-stream":
 					switch (url.hostname) {
+						case "dispatcher.is.autonavi.com":
+							switch (url.pathname) {
+								case "/dispatcher": {
+									Console.info(`x-apple-maps-app-identifier: ${$request.headers["x-apple-maps-app-identifier"]}`);
+									/******************  initialization start  *******************/
+									// 先拆分aRPC校验头和protobuf数据体
+									const arpc = aRPC.response.unpack(rawBody);
+									Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
+									body = GEOPDPlaceResponse.decode(arpc.message);
+									//Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
+									/******************  initialization finish  *******************/
+									let AppleDispatcher = new Uint8Array();
+									switch ($app) {
+										case "Loon":
+										case "Quantumult X":
+										case "Stash":
+											AppleDispatcher = await LocationService.Dispatcher($request);
+											break;
+										case "Surge":
+										case "Egern":
+											AppleDispatcher = Caches.Dispatcher.get($request.id);
+											break;
+										default:
+											break;
+									}
+									AppleDispatcher = GEOPDPlaceResponse.decode(AppleDispatcher);
+									body = GEOPDPlaceResponse.composite(body, AppleDispatcher, Settings);
+									body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+									body.datasetAbStatus = AppleDispatcher.datasetAbStatus;
+									/******************  initialization start  *******************/
+									Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
+									arpc.message = GEOPDPlaceResponse.encode(body);
+									Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
+									rawBody = aRPC.pack(arpc);
+									/******************  initialization finish  *******************/
+									break;
+								}
+							}
+							break;
+						case "gsp-ssl.ls.apple.com":
+							switch (url.pathname) {
+								case "/dispatcher.arpc": {
+									break;
+								}
+							}
+							break;
 						case "gspe35-ssl.ls.apple.com":
 							switch (url.pathname) {
 								case "/config/announcements":
 									break;
-								case "/geo_manifest/dynamic/config": {
-									body = GEOResourceManifestDownload.decode(rawBody);
-									const CountryCode = url.searchParams.get("country_code");
-									const ETag = $response.headers?.Etag ?? $response.headers?.etag;
-									switch (CountryCode) {
-										case "CN": {
-											//GEOResourceManifest.cacheResourceManifest(body, Caches, "CN", ETag);
-											Caches.CN = body;
-											const { ETag: XXETag, body: USBody } = await GEOResourceManifest.downloadResourceManifest($request, "US");
-											Caches.XX = GEOResourceManifestDownload.decode(USBody);
-											break;
-										}
-										case "KR": {
-											//GEOResourceManifest.cacheResourceManifest(body, Caches, "KR", ETag);
-											Caches.KR = body;
-											const { ETag: CNETag, body: CNBody } = await GEOResourceManifest.downloadResourceManifest($request, "CN");
-											Caches.CN = GEOResourceManifestDownload.decode(CNBody);
-											break;
-										}
-										default: {
-											//GEOResourceManifest.cacheResourceManifest(body, Caches, "XX", ETag);
-											Caches.XX = body;
-											const { ETag: CNETag, body: CNBody } = await GEOResourceManifest.downloadResourceManifest($request, "CN");
-											Caches.CN = GEOResourceManifestDownload.decode(CNBody);
-											break;
-										}
-									}
-									body.tileSet = GEOResourceManifest.tileSets(body.tileSet, Caches, Settings, CountryCode);
-									body.attribution = GEOResourceManifest.attributions(body.attribution, Caches, CountryCode);
-									body.resource = GEOResourceManifest.resources(body.resource, Caches, CountryCode);
-									body.dataSet = GEOResourceManifest.dataSets(body.dataSet, Caches, CountryCode);
-									body.urlInfoSet = GEOResourceManifest.urlInfoSets(body.urlInfoSet, Caches, Settings, CountryCode);
-									body.muninBucket = GEOResourceManifest.muninBuckets(body.muninBucket, Caches, Settings);
-									body.displayString = GEOResourceManifest.displayStrings(body.displayString, Caches, CountryCode);
-									body.tileGroup = GEOResourceManifest.tileGroups(body.tileGroup, body.tileSet, body.attribution, body.resource);
-									Console.debug(`releaseInfo: ${body.releaseInfo}`);
-									rawBody = GEOResourceManifestDownload.encode(body);
+								case "/geo_manifest/dynamic/config":
 									break;
-								}
 							}
 							break;
 					}

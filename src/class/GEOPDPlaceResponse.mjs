@@ -165,6 +165,7 @@ export default class GEOPDPlaceResponse {
 				AutoNaviDispatcher.placeResult = GEOPDPlaceResponse.fillMissingByType(AutoNaviDispatcher.placeResult, AppleDispatcher.placeResult, "muid");
 				AutoNaviDispatcher.mapsResult = GEOPDPlaceResponse.fillMissingByType(AutoNaviDispatcher.mapsResult, AppleDispatcher.mapsResult, "resultType");
 				AutoNaviDispatcher.dotPlace = [...AutoNaviDispatcher.dotPlace, ...AppleDispatcher.dotPlace];
+				/*
 				switch (AutoNaviDispatcher.requestType) {
 					case "REQUEST_TYPE_REVERSE_GEOCODING":
 						if (AppleDispatcher.globalResult?.reverseGeocodingResult) AppleDispatcher.globalResult.reverseGeocodingResult.showResult = true;
@@ -172,6 +173,7 @@ export default class GEOPDPlaceResponse {
 					case "REQUEST_TYPE_MAPS_HOME":
 						break;
 				}
+				*/
 				/*
 				if (AppleDispatcher.mapsResult.length > 0) {
 					switch (AutoNaviDispatcher.mapsResult?.[0]?.resultType) {

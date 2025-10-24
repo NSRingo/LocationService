@@ -1,6 +1,9 @@
 import { $app, Console, done, Lodash as _ } from "@nsnanocat/util";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
+import aRPC from "./aRPC/aRPC.mjs";
+import GEOPDPlaceRequest from "./class/GEOPDPlaceRequest.mjs";
+import LocationService from "./class/LocationService.mjs";
 // 构造回复数据
 // biome-ignore lint/style/useConst: <explanation>
 let $response = undefined;
@@ -14,15 +17,12 @@ Console.info(`PATHs: ${PATHs}`);
 // 解析格式
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
 Console.info(`FORMAT: ${FORMAT}`);
-const PLATFORM = ["Maps"];
-if (url.searchParams.get("os") === "watchos") PLATFORM.push("Watch");
-Console.info(`PLATFORM: ${PLATFORM}`);
-(async () => {
+!(async () => {
 	/**
 	 * 设置
 	 * @type {{Settings: import('./types').Settings}}
 	 */
-	const { Settings, Caches, Configs } = setENV("iRingo", PLATFORM, database);
+	const { Settings, Caches, Configs } = setENV("iRingo", "Location", database);
 	Console.logLevel = Settings.LogLevel;
 	// 创建空数据
 	let body = {};
@@ -80,6 +80,95 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 					//Console.debug(`$request: ${JSON.stringify($request, null, 2)}`);
 					let rawBody = $app === "Quantumult X" ? new Uint8Array($request.bodyBytes ?? []) : ($request.body ?? new Uint8Array());
 					//Console.debug(`isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody, null, 2)}`);
+					// 主机判断
+					switch (url.hostname) {
+						case "dispatcher.is.autonavi.com":
+							switch (url.pathname) {
+								// 路径判断
+								case "/dispatcher": {
+									switch ($app) {
+										case "Loon":
+										case "Quantumult X":
+										case "Stash":
+											break;
+										case "Surge":
+										case "Egern": {
+											const AppleDispatcher = await LocationService.Dispatcher($request);
+											LocationService.setDispatcherCache($request, AppleDispatcher, Caches);
+											break;
+										}
+										default:
+											break;
+									}
+									/******************  initialization start  *******************/
+									// 先拆分aRPC校验头和protobuf数据体
+									const arpc = aRPC.request.unpack(rawBody);
+									Console.debug(`arpc.metadata: ${JSON.stringify(arpc.metadata, null, 2)}`);
+									Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
+									//Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
+									/******************  initialization finish  *******************/
+									body = GEOPDPlaceRequest.decode(arpc.message);
+									switch (body.analyticMetadata.appIdentifier) {
+										case "com.apple.Maps": // 地图
+										case "com.apple.NanoMaps": // 地图 (watchOS)
+											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "PLACE_QUESTIONNAIRE")) {
+												body.requestedComponent.push({ type: "PLACE_QUESTIONNAIRE", count: 1 }); // 73 - PLACE_QUESTIONNAIRE
+											}
+											break;
+										case "analyticsd": // 分析
+										case "symptomsd-helper": // ?
+										case "com.apple.news": // 新闻
+										case "com.apple.networkserviceproxy": // ?
+										case "com.apple.CoreRoutine.helperservice":
+										default: {
+											break;
+										}
+										case "com.apple.Home": // 家庭
+										case "com.apple.findmy": // 查找
+										case "com.apple.peopled": // 人物 (macOS)
+										case "com.apple.MobileSMS": // 短信
+										case "com.apple.weather": // 天气
+										case "com.apple.weatherd": // 天气 (macOS)
+										case "com.apple.nanoweatherd": // 天气 (watchOS)
+										case "com.apple.weather.widget": // 天气（小组件）
+										case "com.apple.weather.WeatherIntents": // 天气 (Siri)
+										case "com.apple.photoanalysisd": // 照片分析 (macOS)
+										case "com.apple.MapsSuggestions": // 地图建议
+											break;
+									}
+									//body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+									body.clientMetadata.deviceCountryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+									/******************  initialization start  *******************/
+									Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
+									arpc.message = GEOPDPlaceRequest.encode(body);
+									Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
+									rawBody = aRPC.pack(arpc);
+									/******************  initialization finish  *******************/
+									break;
+								}
+							}
+							break;
+						case "gsp-ssl.ls.apple.com":
+							switch (url.pathname) {
+								case "/dispatcher.arpc": {
+									/******************  initialization start  *******************/
+									// 先拆分aRPC校验头和protobuf数据体
+									const arpc = aRPC.request.unpack(rawBody);
+									Console.debug(`arpc.metadata: ${JSON.stringify(arpc.metadata, null, 2)}`);
+									Console.debug(`arpc.unknown: ${JSON.stringify(arpc.unknown, null, 2)}`);
+									/******************  initialization finish  *******************/
+									body = GEOPDPlaceRequest.decode(arpc.message);
+									Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
+									arpc.message = GEOPDPlaceRequest.encode(body);
+									Console.debug(`arpc.message base64: ${Buffer.from(arpc.message).toString("base64")}`);
+									/******************  initialization start  *******************/
+									rawBody = aRPC.pack(arpc);
+									/******************  initialization finish  *******************/
+									break;
+								}
+							}
+							break;
+					}
 					// 写入二进制数据
 					$request.body = rawBody;
 					break;
@@ -101,6 +190,33 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 							break;
 					}
 					break;
+				case "gsp-ssl.ls.apple.com":
+				case "dispatcher.is.autonavi.com":
+					switch (url.pathname) {
+						case "/dispatcher.arpc":
+						case "/dispatcher":
+							Console.info(`x-apple-maps-app-identifier: ${$request.headers["x-apple-maps-app-identifier"]}`);
+							// 重定向
+							switch (Settings.Redirect.Dispatcher) {
+								case "AUTO":
+									break;
+								case "HYBRID":
+								default:
+									url.hostname = "dispatcher.is.autonavi.com";
+									url.pathname = "/dispatcher";
+									break;
+								case "AutoNavi":
+									url.hostname = "dispatcher.is.autonavi.com";
+									url.pathname = "/dispatcher";
+									break;
+								case "Apple":
+									url.hostname = "gsp-ssl.ls.apple.com";
+									url.pathname = "/dispatcher.arpc";
+									break;
+							}
+							break;
+					}
+					break;
 				case "gspe1-ssl.ls.apple.com":
 					switch (url.pathname) {
 						case "/pep/gcc":
@@ -113,7 +229,7 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 											Connection: "keep-alive",
 											"Content-Encoding": "identity",
 										},
-										body: Settings.PEP.GCC,
+										body: Settings.GeoCountryCode,
 									};
 									Console.debug(JSON.stringify($response));
 									*/
@@ -124,35 +240,8 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 				case "gspe35-ssl.ls.apple.cn":
 					switch (url.pathname) {
 						case "/config/announcements":
-							switch (Settings?.Config?.Announcements?.Environment) {
-								case "AUTO":
-									break;
-								case "CN":
-								default:
-									url.searchParams.set("environment", "prod-cn");
-									break;
-								case "XX":
-									url.searchParams.set("environment", "prod");
-									break;
-							}
 							break;
 						case "/geo_manifest/dynamic/config":
-							switch (Settings?.GeoManifest?.Dynamic?.Config?.CountryCode) {
-								case "AUTO":
-									switch (Caches?.pep?.gcc) {
-										default:
-											url.searchParams.set("country_code", Caches?.pep?.gcc ?? "US");
-											break;
-										case "CN":
-										case undefined:
-											url.searchParams.set("country_code", "CN");
-											break;
-									}
-									break;
-								default:
-									url.searchParams.set("country_code", Settings?.GeoManifest?.Dynamic?.Config?.CountryCode ?? "CN");
-									break;
-							}
 							break;
 					}
 					break;

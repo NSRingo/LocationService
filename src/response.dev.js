@@ -1,5 +1,4 @@
-import { $app, Console, done, fetch, Lodash as _, Storage } from "@nsnanocat/util";
-import XML from "./XML/XML.mjs";
+import { $app, Console, done, Lodash as _, Storage } from "@nsnanocat/util";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
 import aRPC from "./aRPC/aRPC.mjs";
@@ -115,7 +114,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 						case "dispatcher.is.autonavi.com":
 							switch (url.pathname) {
 								case "/dispatcher": {
-									Console.debug(`x-apple-maps-app-identifier: ${$request.headers["x-apple-maps-app-identifier"]}`);
+									Console.info(`x-apple-maps-app-identifier: ${$request.headers["x-apple-maps-app-identifier"]}`);
 									/******************  initialization start  *******************/
 									// 先拆分aRPC校验头和protobuf数据体
 									const arpc = aRPC.response.unpack(rawBody);
@@ -141,6 +140,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 									//Console.debug(`AppleDispatcher: ${JSON.stringify(AppleDispatcher, null, 2)}`);
 									body = GEOPDPlaceResponse.composite(body, AppleDispatcher, Settings);
 									body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
+									/*
 									body.mapsResult = body.mapsResult.map(result => {
 										const resultType = result.resultType;
 										switch (resultType) {
@@ -175,6 +175,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 										}
 										return result;
 									});
+									*/
 									body.datasetAbStatus = AppleDispatcher.datasetAbStatus;
 									/******************  initialization start  *******************/
 									Console.debug(`arpc.message: ${JSON.stringify(body, null, 2)}`);
@@ -189,7 +190,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 						case "gsp-ssl.ls.apple.com":
 							switch (url.pathname) {
 								case "/dispatcher.arpc": {
-									Console.debug(`x-apple-maps-app-identifier: ${$request.headers["x-apple-maps-app-identifier"]}`);
+									Console.info(`x-apple-maps-app-identifier: ${$request.headers["x-apple-maps-app-identifier"]}`);
 									/******************  initialization start  *******************/
 									// 先拆分aRPC校验头和protobuf数据体
 									const arpc = aRPC.response.unpack(rawBody);

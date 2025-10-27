@@ -121,11 +121,22 @@ Console.info(`FORMAT: ${FORMAT}`);
 												body.requestedComponent.push({ type: "ISO_3166_CODE", count: 2147483647 }); // 77 - ISO_3166_CODE
 											}
 											break;
-										default:
+										default: {
+											body.requestedComponent = body.requestedComponent.map(requestedComponent => {
+												switch (requestedComponent.type) {
+													case "RESULT_SNIPPET": // 30 - RESULT_SNIPPET
+														//_.set(requestedComponent, "filter.resultSnippetFilter.supportedChildAction", [1, 2, 3, 4, 5, 6, 7, 8]);
+														break;
+													default:
+														break;
+												}
+												return requestedComponent;
+											});
 											if (!body.requestedComponent.some(requestedComponent => requestedComponent.type === "ISO_3166_CODE")) {
 												body.requestedComponent.push({ type: "ISO_3166_CODE", count: 1 }); // 77 - ISO_3166_CODE
 											}
 											break;
+										}
 									}
 									//body.displayRegion = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");
 									body.clientMetadata.deviceCountryCode = Settings.GeoCountryCode === "AUTO" ? Caches.PEP?.GCC : (Settings.GeoCountryCode ?? "US");

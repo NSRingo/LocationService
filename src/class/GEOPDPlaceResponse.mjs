@@ -1,7 +1,18 @@
 import { Console, Lodash as _ } from "@nsnanocat/util";
 //import { MESSAGE_TYPE, reflectionMergePartial, BinaryReader, WireType, UnknownFieldHandler, isJsonObject, typeofJsonValue, jsonWriteOptions, MessageType } from "@protobuf-ts/runtime";
 import { MapsResultType, StatusCode } from "../proto/apple/geo/protobuf/geo3.js";
-import { ComponentType, Component_CacheControlType, MapsHomeResult_MapsHomeSectionType, GuidesHomeFixedSectionType, GuidesHomeRepeatableSectionType, GuidesHomeRepeatableSectionContentType, PlaceResponse, PlaceRequestType } from "../proto/apple/geo/protobuf/geo3/placedata.js";
+import {
+	ButtonItem_ButtonType,
+	ComponentType,
+	Component_CacheControlType,
+	MapsHomeResult_MapsHomeSectionType,
+	GuidesHomeFixedSectionType,
+	GuidesHomeRepeatableSectionType,
+	GuidesHomeRepeatableSectionContentType,
+	ModuleConfiguration_ModuleConfigurationType,
+	PlaceResponse,
+	PlaceRequestType,
+} from "../proto/apple/geo/protobuf/geo3/placedata.js";
 export default class GEOPDPlaceResponse {
 	static decode(rawBody = new Uint8Array([])) {
 		Console.log("☑️ GEOPDPlaceResponse.decode");
@@ -51,6 +62,21 @@ export default class GEOPDPlaceResponse {
 						if (typeof component.status !== "undefined") component.status = StatusCode[component.status];
 						if (typeof component.cacheControl !== "undefined") component.cacheControl = Component_CacheControlType[component.cacheControl];
 						return component;
+					});
+				if (typeof placeResult?.placeLayoutData?.moduleConfiguration !== "undefined")
+					placeResult.placeLayoutData.moduleConfiguration = placeResult.placeLayoutData.moduleConfiguration.map(moduleConfiguration => {
+						if (typeof moduleConfiguration.moduleConfigurationType !== "undefined") moduleConfiguration.moduleConfigurationType = ModuleConfiguration_ModuleConfigurationType[moduleConfiguration.moduleConfigurationType];
+						if (typeof moduleConfiguration.moduleConfigurationValue?.buttonModuleConfiguration?.buttonItem !== "undefined")
+							moduleConfiguration.moduleConfigurationValue.buttonModuleConfiguration.buttonItem = moduleConfiguration.moduleConfigurationValue.buttonModuleConfiguration.buttonItem.map(buttonItem => {
+								if (typeof buttonItem.buttonType !== "undefined") buttonItem.buttonType = ButtonItem_ButtonType[buttonItem.buttonType];
+								return buttonItem;
+							});
+						if (typeof moduleConfiguration.moduleConfigurationValue?.unifiedActionModuleConfiguration?.buttonItem !== "undefined")
+							moduleConfiguration.moduleConfigurationValue.unifiedActionModuleConfiguration.buttonItem = moduleConfiguration.moduleConfigurationValue.unifiedActionModuleConfiguration.buttonItem.map(buttonItem => {
+								if (typeof buttonItem.buttonType !== "undefined") buttonItem.buttonType = ButtonItem_ButtonType[buttonItem.buttonType];
+								return buttonItem;
+							});
+						return moduleConfiguration;
 					});
 				return placeResult;
 			});
@@ -115,6 +141,21 @@ export default class GEOPDPlaceResponse {
 						if (typeof component.status !== "undefined") component.status = StatusCode[component.status];
 						if (typeof component.cacheControl !== "undefined") component.cacheControl = Component_CacheControlType[component.cacheControl];
 						return component;
+					});
+				if (typeof placeResult?.placeLayoutData?.moduleConfiguration !== "undefined")
+					placeResult.placeLayoutData.moduleConfiguration = placeResult.placeLayoutData.moduleConfiguration.map(moduleConfiguration => {
+						if (typeof moduleConfiguration.moduleConfigurationType !== "undefined") moduleConfiguration.moduleConfigurationType = ModuleConfiguration_ModuleConfigurationType[moduleConfiguration.moduleConfigurationType];
+						if (typeof moduleConfiguration.moduleConfigurationValue?.buttonModuleConfiguration?.buttonItem !== "undefined")
+							moduleConfiguration.moduleConfigurationValue.buttonModuleConfiguration.buttonItem = moduleConfiguration.moduleConfigurationValue.buttonModuleConfiguration.buttonItem.map(buttonItem => {
+								if (typeof buttonItem.buttonType !== "undefined") buttonItem.buttonType = ButtonItem_ButtonType[buttonItem.buttonType];
+								return buttonItem;
+							});
+						if (typeof moduleConfiguration.moduleConfigurationValue?.unifiedActionModuleConfiguration?.buttonItem !== "undefined")
+							moduleConfiguration.moduleConfigurationValue.unifiedActionModuleConfiguration.buttonItem = moduleConfiguration.moduleConfigurationValue.unifiedActionModuleConfiguration.buttonItem.map(buttonItem => {
+								if (typeof buttonItem.buttonType !== "undefined") buttonItem.buttonType = ButtonItem_ButtonType[buttonItem.buttonType];
+								return buttonItem;
+							});
+						return moduleConfiguration;
 					});
 				return placeResult;
 			});

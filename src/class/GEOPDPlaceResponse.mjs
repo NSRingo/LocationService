@@ -91,6 +91,21 @@ export default class GEOPDPlaceResponse {
 						if (typeof component.cacheControl !== "undefined") component.cacheControl = Component_CacheControlType[component.cacheControl];
 						return component;
 					});
+				if (typeof mapsResult.place?.placeLayoutData?.moduleConfiguration !== "undefined")
+					mapsResult.place.placeLayoutData.moduleConfiguration = mapsResult.place.placeLayoutData.moduleConfiguration.map(moduleConfiguration => {
+						if (typeof moduleConfiguration.moduleConfigurationType !== "undefined") moduleConfiguration.moduleConfigurationType = ModuleConfiguration_ModuleConfigurationType[moduleConfiguration.moduleConfigurationType];
+						if (typeof moduleConfiguration.moduleConfigurationValue?.buttonModuleConfiguration?.buttonItem !== "undefined")
+							moduleConfiguration.moduleConfigurationValue.buttonModuleConfiguration.buttonItem = moduleConfiguration.moduleConfigurationValue.buttonModuleConfiguration.buttonItem.map(buttonItem => {
+								if (typeof buttonItem.buttonType !== "undefined") buttonItem.buttonType = ButtonItem_ButtonType[buttonItem.buttonType];
+								return buttonItem;
+							});
+						if (typeof moduleConfiguration.moduleConfigurationValue?.unifiedActionModuleConfiguration?.buttonItem !== "undefined")
+							moduleConfiguration.moduleConfigurationValue.unifiedActionModuleConfiguration.buttonItem = moduleConfiguration.moduleConfigurationValue.unifiedActionModuleConfiguration.buttonItem.map(buttonItem => {
+								if (typeof buttonItem.buttonType !== "undefined") buttonItem.buttonType = ButtonItem_ButtonType[buttonItem.buttonType];
+								return buttonItem;
+							});
+						return moduleConfiguration;
+					});
 				if (typeof mapsResult.collection?.status !== "undefined") mapsResult.collection.status = StatusCode[mapsResult.collection.status];
 				if (typeof mapsResult.collection?.component !== "undefined")
 					mapsResult.collection.component = mapsResult.collection.component.map(component => {
@@ -169,6 +184,21 @@ export default class GEOPDPlaceResponse {
 						if (typeof component.status !== "undefined") component.status = StatusCode[component.status];
 						if (typeof component.cacheControl !== "undefined") component.cacheControl = Component_CacheControlType[component.cacheControl];
 						return component;
+					});
+				if (typeof mapsResult.place?.placeLayoutData?.moduleConfiguration !== "undefined")
+					mapsResult.place.placeLayoutData.moduleConfiguration = mapsResult.place.placeLayoutData.moduleConfiguration.map(moduleConfiguration => {
+						if (typeof moduleConfiguration.moduleConfigurationType !== "undefined") moduleConfiguration.moduleConfigurationType = ModuleConfiguration_ModuleConfigurationType[moduleConfiguration.moduleConfigurationType];
+						if (typeof moduleConfiguration.moduleConfigurationValue?.buttonModuleConfiguration?.buttonItem !== "undefined")
+							moduleConfiguration.moduleConfigurationValue.buttonModuleConfiguration.buttonItem = moduleConfiguration.moduleConfigurationValue.buttonModuleConfiguration.buttonItem.map(buttonItem => {
+								if (typeof buttonItem.buttonType !== "undefined") buttonItem.buttonType = ButtonItem_ButtonType[buttonItem.buttonType];
+								return buttonItem;
+							});
+						if (typeof moduleConfiguration.moduleConfigurationValue?.unifiedActionModuleConfiguration?.buttonItem !== "undefined")
+							moduleConfiguration.moduleConfigurationValue.unifiedActionModuleConfiguration.buttonItem = moduleConfiguration.moduleConfigurationValue.unifiedActionModuleConfiguration.buttonItem.map(buttonItem => {
+								if (typeof buttonItem.buttonType !== "undefined") buttonItem.buttonType = ButtonItem_ButtonType[buttonItem.buttonType];
+								return buttonItem;
+							});
+						return moduleConfiguration;
 					});
 				if (typeof mapsResult.collection?.status !== "undefined") mapsResult.collection.status = StatusCode[mapsResult.collection.status];
 				if (typeof mapsResult.collection?.component !== "undefined")
